@@ -82,3 +82,44 @@
 
 ---
 
+## 2026-03-09 — Implementation-Focused Deep Research
+
+**Session goal:** Answer 7 critical implementation questions about MCP structure exploitability, SLM capabilities, REPL environments, fine-tuning approaches, and verify all existing citations.
+
+**Method:** 15 web searches covering: MCP JSON schema specification, SLM CoT/tool-calling benchmarks (BFCL, MCPMark, TAU-Bench), MCP scaling for SLMs, DisCIPL verification, THREAD verification, CodeAct analysis, REPL alternatives for agents, fine-tuning vs prompting vs scaffolding, SLM HumanEval benchmarks, xLAM function calling, GRPO/RL for tool calling, knowledge distillation approaches, MCP dynamic/lazy loading, and Qwen2.5-Coder capabilities.
+
+### Key Findings
+
+1. **MCP has highly exploitable structure** — fixed JSON schema (name/description/inputSchema) makes tool selection closer to information retrieval than open-ended reasoning. Multi-level lazy loading achieves 98.7% token reduction.
+2. **Nobody has done exactly what we're proposing** — xLAM approached function calling differently (purpose-built, no REPL); no RLM+MCP+SLM work exists.
+3. **xLAM-1B surpasses GPT-3.5 on function calling** — proves 1B models can learn tool use with enough targeted data (60K examples via APIGen).
+4. **GRPO (RL with verifiable rewards) is a strong alternative to SFT** — perfect for MCP tool selection where rewards are programmatically verifiable.
+5. **Qwen2.5-Coder-3B is the optimal primary model** — ~80% HumanEval, Unsloth-supported, GRPO-compatible, tool calling supported.
+6. **All major citations verified** — DisCIPL (arXiv:2504.07081, COLM 2025), THREAD (NAACL 2025), CodeAct (arXiv:2402.01030).
+
+### Deliverables Created
+- `research/implementation_research_q_and_a.md` — Full answers to 7 questions with citations and implementation roadmap
+
+### Open Questions
+- What is the actual zero-shot performance of Qwen2.5-Coder-3B on MCP tool selection? (needs empirical testing)
+- How much data does GRPO need vs. SFT for acceptable tool selection accuracy?
+- Can the constrained REPL approach (predefined functions) alone match full REPL performance?
+
+---
+
+## 2026-03-10 — Implementation POA: REPL Design, System Prompts, Evaluation
+
+**Session goal:** Answer 4 implementation clarification questions (MCP test server, REPL design, system prompt, evaluation) and create comprehensive implementation POA.
+
+**Method:** Extracted RLM system prompts from Appendix D (pages 25-27), read APIGen PDF (3-stage verification pipeline, 3,673 APIs), 4 web searches on MCP test servers, Python SDK, and evaluation metrics.
+
+### Key Findings
+
+1. **MCP test server: Use synthetic tool registries** — we don't need a full MCP server at this stage. Generate JSON tool descriptions at scales of 10/25/50/100 tools. Collect real schemas from MCP reference servers. APIGen's 3-stage verification pipeline (format→execution→semantic) should be adopted for trajectory QA.
+2. **Constrained REPL design finalized** — 3-level architecture: Level 1 (predefined functions only: `search()`, `get_schema()`, `list_names()`), Level 2 (simple Python + regex), Level 3 (full REPL). Code skeletons written for `MCPToolRegistry`, `REPLEngine`, `MCPRLMScaffold`.
+3. **System prompt adapted from RLM Appendix D** — role, context, capabilities, examples, output format. Prompt version should evolve with each testing level.
+4. **7 evaluation metrics defined** — TSA, Parameter Correctness, REPL Code Validity, E2E Task Completion, Turns Used, Context Tokens Saved, Timeout Rate. Decision framework: if RCV≥80% and TSA≥50% at Level 1, fine-tuning may not be critical.
+
+### Deliverables Created
+- `research/implementation_poa.md` — Full implementation POA with code skeletons, system prompt templates, evaluation framework, and 6-phase timeline
+

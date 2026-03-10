@@ -1,0 +1,15 @@
+# MCP-RLM: Scaling MCP Access for SLMs via Recursive Language Models
+# Requirements
+
+# Core (no external dependencies needed for Phase 0-1)
+ollama>=0.4.0       # SLM inference via Ollama Python client
+
+# Utilities
+pyyaml>=6.0         # Config file parsing
+
+# Future phases (uncomment when needed)
+# unsloth             # Phase 5: QLoRA fine-tuning
+# trl                 # Phase 5: GRPO/RL training
+# transformers        # Phase 5: HuggingFace models
+# datasets            # Phase 5: Dataset management
+# peft                # Phase 5: LoRA adapters

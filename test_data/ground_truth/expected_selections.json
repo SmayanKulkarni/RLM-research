@@ -1,0 +1,193 @@
+[
+  {
+    "query": "What's the weather like in London right now?",
+    "expected_tool": "get_weather",
+    "expected_params": {
+      "city": "London"
+    }
+  },
+  {
+    "query": "Send an email to alice@company.com with subject 'Meeting tomorrow' and body 'See you at 3pm'",
+    "expected_tool": "send_email",
+    "expected_params": {
+      "to": "alice@company.com",
+      "subject": "Meeting tomorrow"
+    }
+  },
+  {
+    "query": "Read the contents of /home/user/notes.txt",
+    "expected_tool": "read_file",
+    "expected_params": {
+      "path": "/home/user/notes.txt"
+    }
+  },
+  {
+    "query": "What's Apple's current stock price?",
+    "expected_tool": "get_stock_price",
+    "expected_params": {
+      "symbol": "AAPL"
+    }
+  },
+  {
+    "query": "Translate 'Hello world' to French",
+    "expected_tool": "translate_text",
+    "expected_params": {
+      "text": "Hello world",
+      "target_language": "fr"
+    }
+  },
+  {
+    "query": "What time is it in New York?",
+    "expected_tool": "get_current_time",
+    "expected_params": {
+      "timezone": "America/New_York"
+    }
+  },
+  {
+    "query": "Generate a 16-character secure password",
+    "expected_tool": "generate_password",
+    "expected_params": {
+      "length": 16
+    }
+  },
+  {
+    "query": "Search the web for 'best python frameworks 2025'",
+    "expected_tool": "search_web",
+    "expected_params": {
+      "query": "best python frameworks 2025"
+    }
+  },
+  {
+    "query": "List all files in the /var/log directory",
+    "expected_tool": "list_directory",
+    "expected_params": {
+      "path": "/var/log"
+    }
+  },
+  {
+    "query": "Create a bar chart showing sales data",
+    "expected_tool": "create_chart",
+    "expected_params": {
+      "chart_type": "bar"
+    }
+  },
+  {
+    "query": "I need to find information about quantum computing",
+    "expected_tool": "search_wikipedia",
+    "expected_params": {
+      "query": "quantum computing"
+    }
+  },
+  {
+    "query": "Clone the repository at https://github.com/user/project",
+    "expected_tool": "git_clone",
+    "expected_params": {
+      "repo_url": "https://github.com/user/project"
+    }
+  },
+  {
+    "query": "Post a message in the #engineering Slack channel saying 'Build passed!'",
+    "expected_tool": "send_slack_message",
+    "expected_params": {
+      "channel": "#engineering",
+      "message": "Build passed!"
+    }
+  },
+  {
+    "query": "What does the word 'ephemeral' mean?",
+    "expected_tool": "lookup_definition",
+    "expected_params": {
+      "word": "ephemeral"
+    }
+  },
+  {
+    "query": "Run SELECT * FROM users WHERE active = true on the database",
+    "expected_tool": "query_database",
+    "expected_params": {
+      "query": "SELECT * FROM users WHERE active = true"
+    }
+  },
+  {
+    "query": "Extract text from the scanned document at /docs/receipt.jpg",
+    "expected_tool": "ocr_image",
+    "expected_params": {
+      "image_path": "/docs/receipt.jpg"
+    }
+  },
+  {
+    "query": "Convert 100 USD to EUR",
+    "expected_tool": "convert_currency",
+    "expected_params": {
+      "amount": 100,
+      "from_currency": "USD",
+      "to_currency": "EUR"
+    }
+  },
+  {
+    "query": "Summarize this long article for me",
+    "expected_tool": "summarize_text",
+    "expected_params": {}
+  },
+  {
+    "query": "Create a high-priority task called 'Review PR #42' due tomorrow",
+    "expected_tool": "create_task",
+    "expected_params": {
+      "title": "Review PR #42",
+      "priority": "high"
+    }
+  },
+  {
+    "query": "Get the SHA-256 hash of the text 'hello123'",
+    "expected_tool": "hash_text",
+    "expected_params": {
+      "text": "hello123",
+      "algorithm": "sha256"
+    }
+  },
+  {
+    "query": "I want to save some data as a zip file for backup",
+    "expected_tool": "compress_files",
+    "expected_params": {}
+  },
+  {
+    "query": "Set up a team meeting for next Monday at 2pm",
+    "expected_tool": "create_calendar_event",
+    "expected_params": {}
+  },
+  {
+    "query": "I need to check if this JSON is valid against our API schema",
+    "expected_tool": "validate_json",
+    "expected_params": {}
+  },
+  {
+    "query": "What's the 5-day forecast for San Francisco?",
+    "expected_tool": "get_forecast",
+    "expected_params": {
+      "city": "San Francisco",
+      "days": 5
+    }
+  },
+  {
+    "query": "Find all Python files in /src that contain the word 'TODO'",
+    "expected_tool": "search_code",
+    "expected_params": {
+      "pattern": "TODO",
+      "file_type": ".py"
+    }
+  },
+  {
+    "query": "What tools do I have for working with files?",
+    "expected_tool": "DISCOVERY",
+    "expected_params": {}
+  },
+  {
+    "query": "Show me the communication-related tools available",
+    "expected_tool": "DISCOVERY",
+    "expected_params": {}
+  },
+  {
+    "query": "What machine learning capabilities are available?",
+    "expected_tool": "DISCOVERY",
+    "expected_params": {}
+  }
+]

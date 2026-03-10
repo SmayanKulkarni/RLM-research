@@ -1,0 +1,142 @@
+[
+  {
+    "query": "What's the weather like in London right now?",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Send an email to alice@company.com with subject 'Meeting tomorrow' and body 'See you at 3pm'",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Read the contents of /home/user/notes.txt",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "What's Apple's current stock price?",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Translate 'Hello world' to French",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "What time is it in New York?",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Generate a 16-character secure password",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Search the web for 'best python frameworks 2025'",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "List all files in the /var/log directory",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Create a bar chart showing sales data",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "I need to find information about quantum computing",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Clone the repository at https://github.com/user/project",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Post a message in the #engineering Slack channel saying 'Build passed!'",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "What does the word 'ephemeral' mean?",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Run SELECT * FROM users WHERE active = true on the database",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Extract text from the scanned document at /docs/receipt.jpg",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Convert 100 USD to EUR",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Summarize this long article for me",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Create a high-priority task called 'Review PR #42' due tomorrow",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "Get the SHA-256 hash of the text 'hello123'",
+    "category": "simple",
+    "difficulty": "medium"
+  },
+  {
+    "query": "I want to save some data as a zip file for backup",
+    "category": "simple",
+    "difficulty": "hard"
+  },
+  {
+    "query": "Set up a team meeting for next Monday at 2pm",
+    "category": "simple",
+    "difficulty": "hard"
+  },
+  {
+    "query": "I need to check if this JSON is valid against our API schema",
+    "category": "simple",
+    "difficulty": "hard"
+  },
+  {
+    "query": "What's the 5-day forecast for San Francisco?",
+    "category": "simple",
+    "difficulty": "hard"
+  },
+  {
+    "query": "Find all Python files in /src that contain the word 'TODO'",
+    "category": "simple",
+    "difficulty": "hard"
+  },
+  {
+    "query": "What tools do I have for working with files?",
+    "category": "discovery",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Show me the communication-related tools available",
+    "category": "discovery",
+    "difficulty": "easy"
+  },
+  {
+    "query": "What machine learning capabilities are available?",
+    "category": "discovery",
+    "difficulty": "medium"
+  }
+]

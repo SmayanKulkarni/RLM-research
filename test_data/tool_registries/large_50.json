@@ -1,0 +1,1214 @@
+{
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get current weather conditions for a specified city including temperature, humidity, and conditions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City name (e.g., 'Paris', 'Tokyo')"
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "celsius",
+              "fahrenheit"
+            ],
+            "description": "Temperature units"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "annotations": {
+        "category": "weather"
+      }
+    },
+    {
+      "name": "get_forecast",
+      "description": "Get a multi-day weather forecast for a location.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City name"
+          },
+          "days": {
+            "type": "integer",
+            "description": "Number of days (1-14)"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "annotations": {
+        "category": "weather"
+      }
+    },
+    {
+      "name": "geocode_address",
+      "description": "Convert a street address to latitude and longitude coordinates.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Full street address"
+          }
+        },
+        "required": [
+          "address"
+        ]
+      },
+      "annotations": {
+        "category": "location"
+      }
+    },
+    {
+      "name": "send_email",
+      "description": "Send an email to a recipient with subject and body content.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "description": "Recipient email address"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Email subject line"
+          },
+          "body": {
+            "type": "string",
+            "description": "Email body text"
+          }
+        },
+        "required": [
+          "to",
+          "subject",
+          "body"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "send_slack_message",
+      "description": "Send a message to a Slack channel or user.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "Slack channel name or user ID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message text"
+          }
+        },
+        "required": [
+          "channel",
+          "message"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "create_calendar_event",
+      "description": "Create a new calendar event with title, time, and optional attendees.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Event title"
+          },
+          "start_time": {
+            "type": "string",
+            "description": "Start time in ISO 8601 format"
+          },
+          "end_time": {
+            "type": "string",
+            "description": "End time in ISO 8601 format"
+          },
+          "attendees": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attendee emails"
+          }
+        },
+        "required": [
+          "title",
+          "start_time",
+          "end_time"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "send_sms",
+      "description": "Send an SMS text message to a phone number.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "description": "Recipient phone number"
+          },
+          "message": {
+            "type": "string",
+            "description": "SMS text content"
+          }
+        },
+        "required": [
+          "phone_number",
+          "message"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "read_file",
+      "description": "Read the contents of a file at the specified path.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to read"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "category": "filesystem"
+      }
+    },
+    {
+      "name": "write_file",
+      "description": "Write content to a file at the specified path. Creates the file if it doesn't exist.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to write to"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content to write"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      },
+      "annotations": {
+        "category": "filesystem"
+      }
+    },
+    {
+      "name": "list_directory",
+      "description": "List all files and subdirectories in a given directory path.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Directory path to list"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "category": "filesystem"
+      }
+    },
+    {
+      "name": "query_database",
+      "description": "Execute a SQL query on the connected PostgreSQL database and return results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "SQL query to execute"
+          },
+          "database": {
+            "type": "string",
+            "description": "Database name"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "category": "database"
+      }
+    },
+    {
+      "name": "list_tables",
+      "description": "List all tables in the connected database with their column information.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string",
+            "description": "Database name"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "category": "database"
+      }
+    },
+    {
+      "name": "http_get",
+      "description": "Make an HTTP GET request to a URL and return the response.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL to fetch"
+          },
+          "headers": {
+            "type": "object",
+            "description": "Optional HTTP headers"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "http_post",
+      "description": "Make an HTTP POST request to a URL with a JSON body.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL to post to"
+          },
+          "body": {
+            "type": "object",
+            "description": "JSON request body"
+          },
+          "headers": {
+            "type": "object",
+            "description": "Optional HTTP headers"
+          }
+        },
+        "required": [
+          "url",
+          "body"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "scrape_webpage",
+      "description": "Extract text content from a webpage URL, removing HTML tags.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Webpage URL to scrape"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "search_web",
+      "description": "Search the web using a search engine and return top results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query"
+          },
+          "num_results": {
+            "type": "integer",
+            "description": "Number of results to return"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "analyze_csv",
+      "description": "Analyze a CSV file and return summary statistics including mean, median, and correlations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Path to the CSV file"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Specific columns to analyze"
+          }
+        },
+        "required": [
+          "file_path"
+        ]
+      },
+      "annotations": {
+        "category": "analytics"
+      }
+    },
+    {
+      "name": "create_chart",
+      "description": "Create a chart or plot from provided data and save as an image.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "chart_type": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "line",
+              "pie",
+              "scatter"
+            ],
+            "description": "Type of chart"
+          },
+          "data": {
+            "type": "object",
+            "description": "Chart data with labels and values"
+          },
+          "title": {
+            "type": "string",
+            "description": "Chart title"
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Path to save the chart image"
+          }
+        },
+        "required": [
+          "chart_type",
+          "data"
+        ]
+      },
+      "annotations": {
+        "category": "analytics"
+      }
+    },
+    {
+      "name": "run_inference",
+      "description": "Run inference on a machine learning model with given input data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "description": "Name of the ML model"
+          },
+          "input_data": {
+            "type": "object",
+            "description": "Input data for the model"
+          }
+        },
+        "required": [
+          "model_name",
+          "input_data"
+        ]
+      },
+      "annotations": {
+        "category": "ml"
+      }
+    },
+    {
+      "name": "get_embeddings",
+      "description": "Generate text embeddings using a specified embedding model.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to embed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Embedding model name"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "annotations": {
+        "category": "ml"
+      }
+    },
+    {
+      "name": "classify_text",
+      "description": "Classify text into predefined categories using NLP.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to classify"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of possible categories"
+          }
+        },
+        "required": [
+          "text",
+          "categories"
+        ]
+      },
+      "annotations": {
+        "category": "ml"
+      }
+    },
+    {
+      "name": "get_current_time",
+      "description": "Get the current date and time in a specified timezone.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "timezone": {
+            "type": "string",
+            "description": "IANA timezone (e.g., 'America/New_York')"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "category": "system"
+      }
+    },
+    {
+      "name": "run_shell_command",
+      "description": "Execute a shell command on the system and return its output.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Shell command to execute"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Timeout in seconds"
+          }
+        },
+        "required": [
+          "command"
+        ]
+      },
+      "annotations": {
+        "category": "system"
+      }
+    },
+    {
+      "name": "get_system_info",
+      "description": "Get system information including CPU, memory, and disk usage.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "category": "system"
+      }
+    },
+    {
+      "name": "translate_text",
+      "description": "Translate text from one language to another.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to translate"
+          },
+          "source_language": {
+            "type": "string",
+            "description": "Source language code (e.g., 'en')"
+          },
+          "target_language": {
+            "type": "string",
+            "description": "Target language code (e.g., 'fr')"
+          }
+        },
+        "required": [
+          "text",
+          "target_language"
+        ]
+      },
+      "annotations": {
+        "category": "text"
+      }
+    },
+    {
+      "name": "summarize_text",
+      "description": "Generate a concise summary of a long text document.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to summarize"
+          },
+          "max_length": {
+            "type": "integer",
+            "description": "Maximum summary length in words"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "annotations": {
+        "category": "text"
+      }
+    },
+    {
+      "name": "generate_image",
+      "description": "Generate an image from a text description using AI.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Text description of the image to generate"
+          },
+          "width": {
+            "type": "integer",
+            "description": "Image width in pixels"
+          },
+          "height": {
+            "type": "integer",
+            "description": "Image height in pixels"
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "annotations": {
+        "category": "media"
+      }
+    },
+    {
+      "name": "get_stock_price",
+      "description": "Get the current or historical stock price for a given ticker symbol.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Stock ticker symbol (e.g., 'AAPL')"
+          },
+          "date": {
+            "type": "string",
+            "description": "Optional date for historical price (YYYY-MM-DD)"
+          }
+        },
+        "required": [
+          "symbol"
+        ]
+      },
+      "annotations": {
+        "category": "finance"
+      }
+    },
+    {
+      "name": "convert_currency",
+      "description": "Convert an amount from one currency to another using current exchange rates.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Amount to convert"
+          },
+          "from_currency": {
+            "type": "string",
+            "description": "Source currency code (e.g., 'USD')"
+          },
+          "to_currency": {
+            "type": "string",
+            "description": "Target currency code (e.g., 'EUR')"
+          }
+        },
+        "required": [
+          "amount",
+          "from_currency",
+          "to_currency"
+        ]
+      },
+      "annotations": {
+        "category": "finance"
+      }
+    },
+    {
+      "name": "git_clone",
+      "description": "Clone a Git repository to a local directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_url": {
+            "type": "string",
+            "description": "Git repository URL"
+          },
+          "destination": {
+            "type": "string",
+            "description": "Local directory path"
+          }
+        },
+        "required": [
+          "repo_url"
+        ]
+      },
+      "annotations": {
+        "category": "git"
+      }
+    },
+    {
+      "name": "git_commit",
+      "description": "Create a Git commit with a message in the current repository.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Commit message"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Files to stage"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "annotations": {
+        "category": "git"
+      }
+    },
+    {
+      "name": "create_github_issue",
+      "description": "Create a new issue on a GitHub repository.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo": {
+            "type": "string",
+            "description": "Repository in 'owner/repo' format"
+          },
+          "title": {
+            "type": "string",
+            "description": "Issue title"
+          },
+          "body": {
+            "type": "string",
+            "description": "Issue description"
+          }
+        },
+        "required": [
+          "repo",
+          "title"
+        ]
+      },
+      "annotations": {
+        "category": "git"
+      }
+    },
+    {
+      "name": "search_code",
+      "description": "Search through code files for a pattern or string using regex.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "Search pattern (regex supported)"
+          },
+          "directory": {
+            "type": "string",
+            "description": "Directory to search in"
+          },
+          "file_type": {
+            "type": "string",
+            "description": "File extension filter (e.g., '.py')"
+          }
+        },
+        "required": [
+          "pattern"
+        ]
+      },
+      "annotations": {
+        "category": "code"
+      }
+    },
+    {
+      "name": "search_wikipedia",
+      "description": "Search Wikipedia for articles matching a query and return summaries.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query"
+          },
+          "language": {
+            "type": "string",
+            "description": "Wikipedia language code (default: 'en')"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "category": "knowledge"
+      }
+    },
+    {
+      "name": "lookup_definition",
+      "description": "Look up the dictionary definition of a word.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string",
+            "description": "Word to look up"
+          }
+        },
+        "required": [
+          "word"
+        ]
+      },
+      "annotations": {
+        "category": "knowledge"
+      }
+    },
+    {
+      "name": "create_task",
+      "description": "Create a new task or to-do item with a title and optional due date.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task title"
+          },
+          "due_date": {
+            "type": "string",
+            "description": "Due date in YYYY-MM-DD format"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Task priority"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "annotations": {
+        "category": "productivity"
+      }
+    },
+    {
+      "name": "list_tasks",
+      "description": "List all tasks with optional filtering by status or priority.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "all"
+            ],
+            "description": "Filter by status"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Filter by priority"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "category": "productivity"
+      }
+    },
+    {
+      "name": "generate_password",
+      "description": "Generate a secure random password with specified requirements.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "description": "Password length"
+          },
+          "include_symbols": {
+            "type": "boolean",
+            "description": "Include special characters"
+          },
+          "include_numbers": {
+            "type": "boolean",
+            "description": "Include numbers"
+          }
+        },
+        "required": [
+          "length"
+        ]
+      },
+      "annotations": {
+        "category": "security"
+      }
+    },
+    {
+      "name": "hash_text",
+      "description": "Generate a cryptographic hash of input text using a specified algorithm.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to hash"
+          },
+          "algorithm": {
+            "type": "string",
+            "enum": [
+              "sha256",
+              "sha512",
+              "md5"
+            ],
+            "description": "Hash algorithm"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "annotations": {
+        "category": "security"
+      }
+    },
+    {
+      "name": "resize_image",
+      "description": "Resize an image to specified dimensions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "input_path": {
+            "type": "string",
+            "description": "Input image path"
+          },
+          "width": {
+            "type": "integer",
+            "description": "Target width"
+          },
+          "height": {
+            "type": "integer",
+            "description": "Target height"
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Output image path"
+          }
+        },
+        "required": [
+          "input_path",
+          "width",
+          "height"
+        ]
+      },
+      "annotations": {
+        "category": "media"
+      }
+    },
+    {
+      "name": "convert_pdf_to_text",
+      "description": "Extract text content from a PDF file.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pdf_path": {
+            "type": "string",
+            "description": "Path to the PDF file"
+          }
+        },
+        "required": [
+          "pdf_path"
+        ]
+      },
+      "annotations": {
+        "category": "document"
+      }
+    },
+    {
+      "name": "compress_files",
+      "description": "Compress files or directories into a zip archive.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Files/directories to compress"
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Output zip file path"
+          }
+        },
+        "required": [
+          "paths",
+          "output_path"
+        ]
+      },
+      "annotations": {
+        "category": "filesystem"
+      }
+    },
+    {
+      "name": "validate_json",
+      "description": "Validate JSON data against a JSON schema.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "JSON data to validate"
+          },
+          "schema": {
+            "type": "object",
+            "description": "JSON schema to validate against"
+          }
+        },
+        "required": [
+          "data",
+          "schema"
+        ]
+      },
+      "annotations": {
+        "category": "data"
+      }
+    },
+    {
+      "name": "parse_csv",
+      "description": "Parse a CSV file and return structured data as JSON.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Path to CSV file"
+          },
+          "delimiter": {
+            "type": "string",
+            "description": "Column delimiter character"
+          }
+        },
+        "required": [
+          "file_path"
+        ]
+      },
+      "annotations": {
+        "category": "data"
+      }
+    },
+    {
+      "name": "create_spreadsheet",
+      "description": "Create an Excel spreadsheet with specified data and formatting.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "Rows of data"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Column headers"
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Output file path"
+          }
+        },
+        "required": [
+          "data",
+          "output_path"
+        ]
+      },
+      "annotations": {
+        "category": "document"
+      }
+    },
+    {
+      "name": "ocr_image",
+      "description": "Extract text from an image using optical character recognition.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "image_path": {
+            "type": "string",
+            "description": "Path to image file"
+          },
+          "language": {
+            "type": "string",
+            "description": "OCR language (default: 'eng')"
+          }
+        },
+        "required": [
+          "image_path"
+        ]
+      },
+      "annotations": {
+        "category": "media"
+      }
+    },
+    {
+      "name": "calculate_math",
+      "description": "Evaluate a mathematical expression and return the result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "description": "Mathematical expression to evaluate"
+          }
+        },
+        "required": [
+          "expression"
+        ]
+      },
+      "annotations": {
+        "category": "utility"
+      }
+    },
+    {
+      "name": "format_date",
+      "description": "Convert a date string from one format to another.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "date_string": {
+            "type": "string",
+            "description": "Input date string"
+          },
+          "input_format": {
+            "type": "string",
+            "description": "Input format pattern"
+          },
+          "output_format": {
+            "type": "string",
+            "description": "Desired output format pattern"
+          }
+        },
+        "required": [
+          "date_string",
+          "output_format"
+        ]
+      },
+      "annotations": {
+        "category": "utility"
+      }
+    },
+    {
+      "name": "generate_uuid",
+      "description": "Generate a universally unique identifier (UUID).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "enum": [
+              1,
+              4
+            ],
+            "description": "UUID version"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "category": "utility"
+      }
+    }
+  ],
+  "count": 49
+}

@@ -1,0 +1,600 @@
+{
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get current weather conditions for a specified city including temperature, humidity, and conditions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City name (e.g., 'Paris', 'Tokyo')"
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "celsius",
+              "fahrenheit"
+            ],
+            "description": "Temperature units"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "annotations": {
+        "category": "weather"
+      }
+    },
+    {
+      "name": "get_forecast",
+      "description": "Get a multi-day weather forecast for a location.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City name"
+          },
+          "days": {
+            "type": "integer",
+            "description": "Number of days (1-14)"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "annotations": {
+        "category": "weather"
+      }
+    },
+    {
+      "name": "geocode_address",
+      "description": "Convert a street address to latitude and longitude coordinates.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Full street address"
+          }
+        },
+        "required": [
+          "address"
+        ]
+      },
+      "annotations": {
+        "category": "location"
+      }
+    },
+    {
+      "name": "send_email",
+      "description": "Send an email to a recipient with subject and body content.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "description": "Recipient email address"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Email subject line"
+          },
+          "body": {
+            "type": "string",
+            "description": "Email body text"
+          }
+        },
+        "required": [
+          "to",
+          "subject",
+          "body"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "send_slack_message",
+      "description": "Send a message to a Slack channel or user.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "Slack channel name or user ID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message text"
+          }
+        },
+        "required": [
+          "channel",
+          "message"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "create_calendar_event",
+      "description": "Create a new calendar event with title, time, and optional attendees.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Event title"
+          },
+          "start_time": {
+            "type": "string",
+            "description": "Start time in ISO 8601 format"
+          },
+          "end_time": {
+            "type": "string",
+            "description": "End time in ISO 8601 format"
+          },
+          "attendees": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attendee emails"
+          }
+        },
+        "required": [
+          "title",
+          "start_time",
+          "end_time"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "send_sms",
+      "description": "Send an SMS text message to a phone number.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "description": "Recipient phone number"
+          },
+          "message": {
+            "type": "string",
+            "description": "SMS text content"
+          }
+        },
+        "required": [
+          "phone_number",
+          "message"
+        ]
+      },
+      "annotations": {
+        "category": "communication"
+      }
+    },
+    {
+      "name": "read_file",
+      "description": "Read the contents of a file at the specified path.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to read"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "category": "filesystem"
+      }
+    },
+    {
+      "name": "write_file",
+      "description": "Write content to a file at the specified path. Creates the file if it doesn't exist.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to write to"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content to write"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      },
+      "annotations": {
+        "category": "filesystem"
+      }
+    },
+    {
+      "name": "list_directory",
+      "description": "List all files and subdirectories in a given directory path.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Directory path to list"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "category": "filesystem"
+      }
+    },
+    {
+      "name": "query_database",
+      "description": "Execute a SQL query on the connected PostgreSQL database and return results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "SQL query to execute"
+          },
+          "database": {
+            "type": "string",
+            "description": "Database name"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "category": "database"
+      }
+    },
+    {
+      "name": "list_tables",
+      "description": "List all tables in the connected database with their column information.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string",
+            "description": "Database name"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "category": "database"
+      }
+    },
+    {
+      "name": "http_get",
+      "description": "Make an HTTP GET request to a URL and return the response.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL to fetch"
+          },
+          "headers": {
+            "type": "object",
+            "description": "Optional HTTP headers"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "http_post",
+      "description": "Make an HTTP POST request to a URL with a JSON body.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL to post to"
+          },
+          "body": {
+            "type": "object",
+            "description": "JSON request body"
+          },
+          "headers": {
+            "type": "object",
+            "description": "Optional HTTP headers"
+          }
+        },
+        "required": [
+          "url",
+          "body"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "scrape_webpage",
+      "description": "Extract text content from a webpage URL, removing HTML tags.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Webpage URL to scrape"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "search_web",
+      "description": "Search the web using a search engine and return top results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query"
+          },
+          "num_results": {
+            "type": "integer",
+            "description": "Number of results to return"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "category": "web"
+      }
+    },
+    {
+      "name": "analyze_csv",
+      "description": "Analyze a CSV file and return summary statistics including mean, median, and correlations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Path to the CSV file"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Specific columns to analyze"
+          }
+        },
+        "required": [
+          "file_path"
+        ]
+      },
+      "annotations": {
+        "category": "analytics"
+      }
+    },
+    {
+      "name": "create_chart",
+      "description": "Create a chart or plot from provided data and save as an image.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "chart_type": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "line",
+              "pie",
+              "scatter"
+            ],
+            "description": "Type of chart"
+          },
+          "data": {
+            "type": "object",
+            "description": "Chart data with labels and values"
+          },
+          "title": {
+            "type": "string",
+            "description": "Chart title"
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Path to save the chart image"
+          }
+        },
+        "required": [
+          "chart_type",
+          "data"
+        ]
+      },
+      "annotations": {
+        "category": "analytics"
+      }
+    },
+    {
+      "name": "run_inference",
+      "description": "Run inference on a machine learning model with given input data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "description": "Name of the ML model"
+          },
+          "input_data": {
+            "type": "object",
+            "description": "Input data for the model"
+          }
+        },
+        "required": [
+          "model_name",
+          "input_data"
+        ]
+      },
+      "annotations": {
+        "category": "ml"
+      }
+    },
+    {
+      "name": "get_embeddings",
+      "description": "Generate text embeddings using a specified embedding model.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to embed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Embedding model name"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "annotations": {
+        "category": "ml"
+      }
+    },
+    {
+      "name": "classify_text",
+      "description": "Classify text into predefined categories using NLP.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to classify"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of possible categories"
+          }
+        },
+        "required": [
+          "text",
+          "categories"
+        ]
+      },
+      "annotations": {
+        "category": "ml"
+      }
+    },
+    {
+      "name": "get_current_time",
+      "description": "Get the current date and time in a specified timezone.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "timezone": {
+            "type": "string",
+            "description": "IANA timezone (e.g., 'America/New_York')"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "category": "system"
+      }
+    },
+    {
+      "name": "run_shell_command",
+      "description": "Execute a shell command on the system and return its output.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Shell command to execute"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Timeout in seconds"
+          }
+        },
+        "required": [
+          "command"
+        ]
+      },
+      "annotations": {
+        "category": "system"
+      }
+    },
+    {
+      "name": "get_system_info",
+      "description": "Get system information including CPU, memory, and disk usage.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "category": "system"
+      }
+    },
+    {
+      "name": "translate_text",
+      "description": "Translate text from one language to another.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to translate"
+          },
+          "source_language": {
+            "type": "string",
+            "description": "Source language code (e.g., 'en')"
+          },
+          "target_language": {
+            "type": "string",
+            "description": "Target language code (e.g., 'fr')"
+          }
+        },
+        "required": [
+          "text",
+          "target_language"
+        ]
+      },
+      "annotations": {
+        "category": "text"
+      }
+    }
+  ],
+  "count": 25
+}

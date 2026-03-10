@@ -1,0 +1,34 @@
+# MCP-RLM Configuration
+# Adjust these parameters to control the evaluation
+
+slm:
+  model_name: "qwen2.5-coder:3b"
+  temperature: 0.1
+  max_tokens: 2048
+  top_p: 0.9
+  repeat_penalty: 1.1
+  base_url: "http://localhost:11434"
+
+repl:
+  level_1:
+    max_output_chars: 2000
+    max_turns: 10
+    timeout_seconds: 30
+    allowed_imports: []
+
+  level_2:
+    max_output_chars: 2000
+    max_turns: 10
+    timeout_seconds: 30
+    allowed_imports: ["re", "json"]
+
+  level_3:
+    max_output_chars: 4000
+    max_turns: 15
+    timeout_seconds: 60
+    allowed_imports: ["re", "json", "math", "collections", "itertools"]
+
+evaluation:
+  registries: ["small_10", "medium_25", "large_50"]
+  levels: [0, 1, 2]
+  include_discovery_queries: false
