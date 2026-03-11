@@ -1,0 +1,91 @@
+{
+  "metrics": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.5714,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.5714,
+    "avg_turns": 1.0,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 7
+  },
+  "results": [
+    {
+      "query": "What's the weather like in London right now?",
+      "expected_tool": "get_weather",
+      "predicted_tool": "get_weather",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 1,
+      "success": true,
+      "elapsed_seconds": 3.46
+    },
+    {
+      "query": "Send an email to alice@company.com with subject 'Meeting tomorrow' and body 'See you at 3pm'",
+      "expected_tool": "send_email",
+      "predicted_tool": "send_email",
+      "tool_correct": true,
+      "params_correct": false,
+      "code_validity": 1.0,
+      "turns_used": 1,
+      "success": true,
+      "elapsed_seconds": 3.41
+    },
+    {
+      "query": "Read the contents of /home/user/notes.txt",
+      "expected_tool": "read_file",
+      "predicted_tool": "read_file",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 1,
+      "success": true,
+      "elapsed_seconds": 2.12
+    },
+    {
+      "query": "List all files in the /var/log directory",
+      "expected_tool": "list_directory",
+      "predicted_tool": "list_directory",
+      "tool_correct": true,
+      "params_correct": false,
+      "code_validity": 1.0,
+      "turns_used": 1,
+      "success": true,
+      "elapsed_seconds": 2.15
+    },
+    {
+      "query": "Post a message in the #engineering Slack channel saying 'Build passed!'",
+      "expected_tool": "send_slack_message",
+      "predicted_tool": "send_slack_message",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 1,
+      "success": true,
+      "elapsed_seconds": 2.52
+    },
+    {
+      "query": "Set up a team meeting for next Monday at 2pm",
+      "expected_tool": "create_calendar_event",
+      "predicted_tool": "create_calendar_event",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 1,
+      "success": true,
+      "elapsed_seconds": 5.33
+    },
+    {
+      "query": "What's the 5-day forecast for San Francisco?",
+      "expected_tool": "get_forecast",
+      "predicted_tool": "get_forecast",
+      "tool_correct": true,
+      "params_correct": false,
+      "code_validity": 1.0,
+      "turns_used": 1,
+      "success": true,
+      "elapsed_seconds": 1.96
+    }
+  ]
+}

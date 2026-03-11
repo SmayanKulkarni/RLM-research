@@ -23,6 +23,10 @@ class SLMConfig:
     top_p: float = 0.9
     repeat_penalty: float = 1.1
     base_url: str = "http://localhost:11434"
+    # Stop sequences to enforce turn-taking (CodeAct pattern).
+    # The SLM stops generating after </code>, allowing the scaffold
+    # to execute the code and feed back real output.
+    stop_sequences: list[str] = field(default_factory=lambda: ["</code>"])
 
 
 class SLMInterface:
@@ -72,15 +76,19 @@ class SLMInterface:
 
     def _generate_ollama_client(self, messages: list[dict]) -> str:
         """Generate using the ollama Python client."""
+        options = {
+            "temperature": self.config.temperature,
+            "num_predict": self.config.max_tokens,
+            "top_p": self.config.top_p,
+            "repeat_penalty": self.config.repeat_penalty,
+        }
+        if self.config.stop_sequences:
+            options["stop"] = self.config.stop_sequences
+
         response = self._client.chat(
             model=self.config.model_name,
             messages=messages,
-            options={
-                "temperature": self.config.temperature,
-                "num_predict": self.config.max_tokens,
-                "top_p": self.config.top_p,
-                "repeat_penalty": self.config.repeat_penalty,
-            },
+            options=options,
         )
         return response["message"]["content"]
 
@@ -88,16 +96,20 @@ class SLMInterface:
         """Fallback: generate using ollama CLI via subprocess."""
         import urllib.request
 
+        options = {
+            "temperature": self.config.temperature,
+            "num_predict": self.config.max_tokens,
+            "top_p": self.config.top_p,
+            "repeat_penalty": self.config.repeat_penalty,
+        }
+        if self.config.stop_sequences:
+            options["stop"] = self.config.stop_sequences
+
         payload = {
             "model": self.config.model_name,
             "messages": messages,
             "stream": False,
-            "options": {
-                "temperature": self.config.temperature,
-                "num_predict": self.config.max_tokens,
-                "top_p": self.config.top_p,
-                "repeat_penalty": self.config.repeat_penalty,
-            },
+            "options": options,
         }
 
         req = urllib.request.Request(

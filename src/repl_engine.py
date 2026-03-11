@@ -4,10 +4,12 @@ REPLEngine — Executes SLM-generated code in a controlled Python REPL.
 Adapted from the RLM paper's REPL architecture (Zhang et al., 2025, Appendix D):
 - Variables persist across turns (exec in shared namespace)
 - Output is truncated to fit SLM context window
-- Code blocks are extracted from ```repl fenced blocks
+- Code blocks extracted from <code></code> XML tags (CodeAct pattern)
+  or ```repl fenced blocks (fallback)
 - FINAL() / FINAL_VAR() extraction for output
 
 Design Reference: implementation_poa.md § Q2 (REPL Design)
+CodeAct Reference: Wang et al., ICML 2024 — XML delimiters for turn-taking
 """
 
 from __future__ import annotations
@@ -195,9 +197,25 @@ class REPLEngine:
 
     @staticmethod
     def extract_code_blocks(text: str) -> list[str]:
-        """Extract ```repl code blocks from SLM output text."""
-        pattern = r'```repl\n(.*?)```'
-        blocks = re.findall(pattern, text, re.DOTALL)
+        """
+        Extract code blocks from SLM output text.
+
+        Tries XML <code></code> tags first (CodeAct pattern),
+        then falls back to ```repl markdown fences.
+
+        Note: When using Ollama stop sequences, the closing </code>
+        tag may be stripped from the response. We handle both cases.
+        """
+        # Primary: XML <code>...</code> tags — with or without closing tag
+        # (Ollama's stop sequence consumes </code> from the response)
+        xml_pattern = r'<code>\s*\n?(.*?)(?:</code>|$)'
+        blocks = re.findall(xml_pattern, text, re.DOTALL)
+        if blocks:
+            return [block.strip() for block in blocks if block.strip()]
+
+        # Fallback: markdown ```repl/python fences
+        md_pattern = r'```(?:repl|python)?\n(.*?)(?:```|$)'
+        blocks = re.findall(md_pattern, text, re.DOTALL)
         return [block.strip() for block in blocks if block.strip()]
 
     @staticmethod

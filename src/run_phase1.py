@@ -83,11 +83,20 @@ def main():
     print(f"  Time: {datetime.now().isoformat()}")
     print("=" * 60)
 
-    # Initialize SLM once (reuse connection)
-    slm = SLMInterface(SLMConfig(
+    # Initialize SLM configs
+    # Level 0 (zero-shot): no stop sequences needed (no REPL)
+    # Level 1/2: stop sequences enforce turn-taking at </code>
+    slm_level0 = SLMInterface(SLMConfig(
         model_name="qwen2.5-coder:3b",
         temperature=0.1,
         max_tokens=2048,
+        stop_sequences=[],  # No REPL → no stop sequences
+    ))
+    slm_repl = SLMInterface(SLMConfig(
+        model_name="qwen2.5-coder:3b",
+        temperature=0.1,
+        max_tokens=2048,
+        stop_sequences=["</code>"],  # Enforce turn-taking
     ))
 
     all_cases = load_test_cases()
@@ -110,7 +119,8 @@ def main():
         print(f"{'#' * 60}")
 
         start = time.time()
-        metrics, results = run_single_eval(level, reg_name, slm, all_cases)
+        current_slm = slm_level0 if level == 0 else slm_repl
+        metrics, results = run_single_eval(level, reg_name, current_slm, all_cases)
         elapsed = time.time() - start
 
         if metrics:

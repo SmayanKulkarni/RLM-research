@@ -137,9 +137,43 @@ class MCPRLMScaffold:
             response = self.slm.generate(conversation)
             raw_outputs.append(response)
 
-            # Check for FINAL answer
+            # Step 1: Check for FINAL in the raw response text first
+            # (handles pure text responses with FINAL and no code)
             final = REPLEngine.extract_final(response, self.repl.namespace)
-            if final is not None:
+
+            # Step 2: Extract code blocks
+            code_blocks = REPLEngine.extract_code_blocks(response)
+
+            # Step 3: If code blocks exist, check if any contain FINAL()
+            # (SLM sometimes puts FINAL inside <code> tags)
+            if code_blocks:
+                for code in code_blocks:
+                    code_final = REPLEngine.extract_final(code, self.repl.namespace)
+                    if code_final is not None:
+                        return ScaffoldResult(
+                            query=user_query,
+                            answer=code_final,
+                            turns=turn + 1,
+                            success=True,
+                            repl_history=self.repl.history,
+                            conversation=conversation,
+                            elapsed_seconds=time.time() - start_time,
+                            raw_slm_outputs=raw_outputs,
+                        )
+
+                # No FINAL in code → execute code blocks in REPL
+                repl_output = ""
+                for code in code_blocks:
+                    result = self.repl.execute(code)
+                    repl_output += f"\n[REPL OUTPUT]:\n{result.output}\n"
+
+                # Append SLM response + REPL output to conversation
+                conversation.append({"role": "assistant", "content": response})
+                if repl_output.strip():
+                    conversation.append({"role": "user", "content": repl_output.strip()})
+
+            elif final is not None:
+                # No code blocks, but FINAL found → return answer
                 return ScaffoldResult(
                     query=user_query,
                     answer=final,
@@ -150,28 +184,13 @@ class MCPRLMScaffold:
                     elapsed_seconds=time.time() - start_time,
                     raw_slm_outputs=raw_outputs,
                 )
-
-            # Extract and execute ```repl code blocks
-            code_blocks = REPLEngine.extract_code_blocks(response)
-
-            repl_output = ""
-            for code in code_blocks:
-                result = self.repl.execute(code)
-                repl_output += f"\n[REPL OUTPUT]:\n{result.output}\n"
-
-            # Append SLM response to conversation
-            conversation.append({"role": "assistant", "content": response})
-
-            # If there was REPL output, send it back as user message
-            if repl_output.strip():
-                conversation.append({"role": "user", "content": repl_output.strip()})
             else:
-                # No code blocks and no FINAL — SLM might be stuck
-                # Nudge it to use the REPL or provide FINAL
+                # No code blocks and no FINAL — nudge the SLM
+                conversation.append({"role": "assistant", "content": response})
                 conversation.append({
                     "role": "user",
                     "content": (
-                        "Please use ```repl code blocks to search for tools, "
+                        "Please write code inside <code></code> tags to search for tools, "
                         "or provide your final answer with FINAL(...)."
                     ),
                 })
