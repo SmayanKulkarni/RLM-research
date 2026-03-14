@@ -123,3 +123,122 @@
 ### Deliverables Created
 - `research/implementation_poa.md` — Full implementation POA with code skeletons, system prompt templates, evaluation framework, and 6-phase timeline
 
+---
+
+## 2026-03-14 — Post-Last-Push Exhaustive Change Audit (Uncommitted Work)
+
+**Session goal:** Systematically append all work completed after the last git push, with an exhaustive inventory and outcome snapshot.
+
+### Git Baseline (Source of Truth)
+- Current branch: `main`
+- Upstream tracking: `origin/main`
+- Last pushed commit at audit time: `5479557` (`HEAD == origin/main`)
+- Interpretation: there are **no additional commits** after the last push; all post-push work is currently in **working-tree modifications + untracked artifacts**.
+
+### Tracked File Modifications (4 files)
+1. `.gitignore`
+  - Added `.env` ignore rule for local secret management (`GROQ_API_KEY`, etc.).
+
+2. `configs/repl_config.yaml`
+  - Default SLM model updated:
+    - from `qwen2.5-coder:3b`
+    - to `qwen3.5:4b`
+
+3. `src/slm_interface.py`
+  - `SLMConfig.model_name` default updated to `qwen3.5:4b` for runtime consistency with config.
+
+4. `requirements.txt`
+  - Reworked into phase-structured dependency layout with install notes.
+  - `ollama` minimum version increased (`>=0.6.0`).
+  - Added trajectory generation dependency: `groq`.
+  - Added fine-tuning stack dependencies: `transformers`, `trl`, `peft`, `datasets`, `accelerate`, `bitsandbytes`.
+  - Added explicit install guidance for CUDA `torch` and `unsloth` in `astro` env.
+
+### New Source Modules Added (5 files)
+1. `src/generate_trajectories.py`
+  - Synthetic trajectory generation pipeline using Groq (`llama-3.3-70b-versatile`).
+  - Grounds model-produced code blocks by executing them via real `REPLEngine`.
+  - Builds multi-turn SFT-ready conversations with real `[REPL OUTPUT]` turns.
+  - Includes query generation per tool and registry-aware generation loops.
+
+2. `src/verify_trajectories.py`
+  - APIGen-style 3-stage verifier:
+    - Stage 1: format
+    - Stage 2: execution re-check against real REPL
+    - Stage 3: semantic correctness (`predicted_tool == correct_tool`, params, registry membership)
+  - Produces verified and rejected JSONL outputs with reject reasons.
+
+3. `src/augment_trajectories.py`
+  - Offline dataset scaling without external API calls:
+    - Cross-registry re-grounding
+    - Template-based synthesis
+    - Query paraphrasing (templates + synonym substitutions)
+  - Re-executes augmented code on real REPL before retaining examples.
+
+4. `src/finetune.py`
+  - QLoRA fine-tuning pipeline for `Qwen/Qwen3.5-4B*` using Unsloth + TRL SFT.
+  - LoRA config: `r=32`, `alpha=32`, `dropout=0.05`, standard attention/MLP targets.
+  - Includes dataset formatting, token-length filtering, train/eval split, checkpoint cleanup, optional merged and GGUF export.
+
+5. `src/run_hf_comparison.py`
+  - HuggingFace/Unsloth inference wrapper (`HFSLM`) and evaluation matrix runner.
+  - Compares base vs fine-tuned performance across level/registry settings.
+  - Writes summary and delta comparison JSON outputs.
+
+### New Data Artifacts (Untracked, `data/`)
+- `data/trajectories_raw.jsonl` — 117 lines
+- `data/trajectories_verified.jsonl` — 117 lines
+- `data/trajectories_raw_new.jsonl` — 40 lines
+- `data/trajectories_verified_new.jsonl` — 40 lines
+- `data/trajectories_augmented.jsonl` — 388 lines
+- `data/trajectories_final.jsonl` — 388 lines
+- `data/trajectories_final_qwen35.jsonl` — 418 lines
+
+### New Fine-Tuning Artifacts (Untracked, `finetuned/`)
+- Adapter package present at `finetuned/qwen3.55-4b-rlm-lora/` containing:
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+  - `tokenizer.json`
+  - `tokenizer_config.json`
+  - `chat_template.jinja`
+  - `README.md`
+- Compiled kernel/cache outputs present: `unsloth_compiled_cache/` with 74 files.
+
+### New Evaluation Result Files (Untracked, `results/` on 2026-03-12)
+- `results/level0_small_10_20260312_172730.json`
+- `results/level1_small_10_20260312_172804.json`
+- `results/level2_small_10_20260312_172842.json`
+- `results/level0_medium_25_20260312_172915.json`
+- `results/level1_medium_25_20260312_173024.json`
+- `results/level2_medium_25_20260312_173147.json`
+- `results/level0_large_50_20260312_173308.json`
+
+### Metrics Snapshot from Newly Added Result Files
+1. **Small-10 registry (7 queries)**
+  - Level 0: TSA 1.0000, PC 0.7143, RCV 1.0000, E2E 0.7143, avg turns 1.00, failure 0.0000
+  - Level 1: TSA 0.8571, PC 0.8571, RCV 1.0000, E2E 0.8571, avg turns 3.43, failure 0.0000
+  - Level 2: TSA 0.8571, PC 0.8571, RCV 1.0000, E2E 0.8571, avg turns 3.71, failure 0.0000
+
+2. **Medium-25 registry (12 queries)**
+  - Level 0: TSA 0.9167, PC 0.6667, RCV 1.0000, E2E 0.6667, avg turns 1.00, failure 0.0000
+  - Level 1: TSA 0.9167, PC 0.9167, RCV 1.0000, E2E 0.9167, avg turns 4.00, failure 0.0833
+  - Level 2: TSA 0.9167, PC 0.9167, RCV 1.0000, E2E 0.9167, avg turns 4.42, failure 0.0833
+
+3. **Large-50 registry (25 queries, Level 0 run available in untracked set)**
+  - Level 0: TSA 0.9600, PC 0.6400, RCV 1.0000, E2E 0.6400, avg turns 1.00, failure 0.0000
+
+### Additional New Workspace Additions
+- `.github/agents/AI Reseach RLM.agent.md` added (autonomous agent profile/config, 500+ lines).
+
+### Post-Push Working Tree Summary (at audit time)
+- Modified tracked files: 4
+- Untracked high-level roots: `.github/`, `data/`, `finetuned/`, `results/`, `src/`, `unsloth_compiled_cache/`
+- Untracked new source files: 5
+- Untracked new result files: 7
+- Untracked fine-tuned adapter files: 6
+
+### Immediate Next Actions
+- Stage curated subsets intentionally (`src/*`, config/requirements, selected `results/`) based on repo size policy.
+- Decide whether `data/`, `finetuned/`, and `unsloth_compiled_cache/` should be committed, moved to release assets, or ignored.
+- If committing datasets/artifacts, add versioning notes (generation date, model, and pipeline stage) in a companion manifest.
+

@@ -1,0 +1,146 @@
+{
+  "metrics": {
+    "tool_selection_accuracy": 0.9167,
+    "parameter_correctness": 0.9167,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.9167,
+    "avg_turns": 4.0,
+    "failure_rate": 0.0833,
+    "context_savings_pct": 1.0,
+    "total_queries": 12
+  },
+  "results": [
+    {
+      "query": "What's the weather like in London right now?",
+      "expected_tool": "get_weather",
+      "predicted_tool": "get_weather",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 3.34
+    },
+    {
+      "query": "Send an email to alice@company.com with subject 'Meeting tomorrow' and body 'See you at 3pm'",
+      "expected_tool": "send_email",
+      "predicted_tool": "send_email",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 3.62
+    },
+    {
+      "query": "Read the contents of /home/user/notes.txt",
+      "expected_tool": "read_file",
+      "predicted_tool": "read_file",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 5,
+      "success": true,
+      "elapsed_seconds": 7.27
+    },
+    {
+      "query": "Translate 'Hello world' to French",
+      "expected_tool": "translate_text",
+      "predicted_tool": "translate_text",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 4.59
+    },
+    {
+      "query": "What time is it in New York?",
+      "expected_tool": "get_current_time",
+      "predicted_tool": "get_current_time",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 3.79
+    },
+    {
+      "query": "Search the web for 'best python frameworks 2025'",
+      "expected_tool": "search_web",
+      "predicted_tool": null,
+      "tool_correct": false,
+      "params_correct": false,
+      "code_validity": 1.0,
+      "turns_used": 10,
+      "success": false,
+      "elapsed_seconds": 14.06
+    },
+    {
+      "query": "List all files in the /var/log directory",
+      "expected_tool": "list_directory",
+      "predicted_tool": "list_directory",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 3.95
+    },
+    {
+      "query": "Create a bar chart showing sales data",
+      "expected_tool": "create_chart",
+      "predicted_tool": "create_chart",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 6.26
+    },
+    {
+      "query": "Post a message in the #engineering Slack channel saying 'Build passed!'",
+      "expected_tool": "send_slack_message",
+      "predicted_tool": "send_slack_message",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 4,
+      "success": true,
+      "elapsed_seconds": 4.51
+    },
+    {
+      "query": "Run SELECT * FROM users WHERE active = true on the database",
+      "expected_tool": "query_database",
+      "predicted_tool": "query_database",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 4.49
+    },
+    {
+      "query": "Set up a team meeting for next Monday at 2pm",
+      "expected_tool": "create_calendar_event",
+      "predicted_tool": "create_calendar_event",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 5,
+      "success": true,
+      "elapsed_seconds": 9.21
+    },
+    {
+      "query": "What's the 5-day forecast for San Francisco?",
+      "expected_tool": "get_forecast",
+      "predicted_tool": "get_forecast",
+      "tool_correct": true,
+      "params_correct": true,
+      "code_validity": 1.0,
+      "turns_used": 3,
+      "success": true,
+      "elapsed_seconds": 3.68
+    }
+  ]
+}

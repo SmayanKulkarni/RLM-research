@@ -17,7 +17,7 @@ from typing import Any
 @dataclass
 class SLMConfig:
     """Configuration for the SLM."""
-    model_name: str = "qwen2.5-coder:3b"
+    model_name: str = "qwen3.5:4b"
     temperature: float = 0.1       # Low temp for deterministic tool selection
     max_tokens: int = 2048
     top_p: float = 0.9

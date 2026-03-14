@@ -2,7 +2,7 @@
 # Adjust these parameters to control the evaluation
 
 slm:
-  model_name: "qwen2.5-coder:3b"
+  model_name: "qwen3.5:4b"
   temperature: 0.1
   max_tokens: 2048
   top_p: 0.9

@@ -1,15 +1,28 @@
 # MCP-RLM: Scaling MCP Access for SLMs via Recursive Language Models
 # Requirements
+#
+# Install into the 'astro' conda environment:
+#   conda run -n astro pip install -r requirements.txt
+#
+# NOTE: Torch must be installed first with the correct CUDA wheel:
+#   conda run -n astro pip install "torch==2.6.0+cu126" --index-url https://download.pytorch.org/whl/cu126
+# Then install Unsloth:
+#   conda run -n astro pip install "unsloth[cu126-torch260] @ git+https://github.com/unslothai/unsloth.git"
 
-# Core (no external dependencies needed for Phase 0-1)
-ollama>=0.4.0       # SLM inference via Ollama Python client
+# ── Inference (Ollama) ──────────────────────────────────────────────────────
+ollama>=0.6.0           # SLM inference via Ollama Python client
 
-# Utilities
-pyyaml>=6.0         # Config file parsing
+# ── Trajectory Generation ───────────────────────────────────────────────────
+groq>=1.0.0             # Groq API client (free tier: llama-3.3-70b-versatile)
 
-# Future phases (uncomment when needed)
-# unsloth             # Phase 5: QLoRA fine-tuning
-# trl                 # Phase 5: GRPO/RL training
-# transformers        # Phase 5: HuggingFace models
-# datasets            # Phase 5: Dataset management
-# peft                # Phase 5: LoRA adapters
+# ── Fine-Tuning (Phase 5) ───────────────────────────────────────────────────
+# unsloth installed separately — see NOTE above
+transformers>=5.0.0     # HuggingFace transformers
+trl>=0.24.0             # SFTTrainer, GRPO
+peft>=0.18.0            # LoRA adapters
+datasets>=4.0.0         # HuggingFace datasets
+accelerate>=1.0.0       # Distributed training helpers
+bitsandbytes>=0.49.0    # 4-bit/8-bit quantisation
+
+# ── Utilities ───────────────────────────────────────────────────────────────
+pyyaml>=6.0             # Config file parsing
