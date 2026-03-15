@@ -152,7 +152,7 @@ The RLM REPL has these core components:
 │                                                         │
 │  ┌─────────────┐     ┌──────────────────┐              │
 │  │   SLM        │◄───►│  REPL Engine     │              │
-│  │ (Qwen2.5    │     │                  │              │
+│  │ (Qwen3.5    │     │                  │              │
 │  │  Coder 3B)  │     │  Pre-loaded:     │              │
 │  │             │     │  • tools_registry│              │
 │  │  Generates: │     │  • helper funcs  │              │
@@ -400,7 +400,7 @@ class MCPRLMScaffold:
 
 ---
 
-## Q3: System Prompt Design for Qwen2.5-Coder-3B
+## Q3: System Prompt Design for Qwen3.5-4B
 
 ### RLM Paper's System Prompt Structure (Extracted from Appendix D)
 
@@ -616,7 +616,7 @@ class MCPToolEvaluator:
 
 | Task | Details | Deliverable |
 |------|---------|-------------|
-| Install Ollama + Qwen2.5-Coder-3B | `ollama pull qwen2.5-coder:3b` | Working local inference |
+| Install Ollama + Qwen3.5-4B | `ollama pull qwen3.5:4b` | Working local inference |
 | Set up Python project structure | See directory structure below | Clean codebase |
 | Install dependencies | `pip install mcp pydantic` (minimal) | requirements.txt |
 | Create synthetic tool registries | 10/25/50/100 tool JSON files | `test_data/tool_registries/` |
@@ -651,7 +651,7 @@ rlm/
 ### Phase 1: Baseline Testing (Days 3–7)
 
 **Step 1: Level 0 — Zero-Shot (No REPL)**
-- Load ALL tool descriptions directly into Qwen2.5-Coder-3B's context
+- Load ALL tool descriptions directly into Qwen3.5-4B's context
 - Run all test queries, measure TSA + PC
 - Test with 10, 25, 50 tools (find where it breaks)
 - **Expected outcome:** Works decently with 10 tools; degrades sharply at 25+
@@ -693,7 +693,7 @@ Apply the decision framework from Q4 above. If fine-tuning is needed:
 
 ### Phase 5: Fine-Tuning (Days 15–20)
 
-- QLoRA fine-tune Qwen2.5-Coder-3B on verified trajectories using Unsloth
+- LoRA fine-tune Qwen3.5-4B on verified trajectories using Unsloth
 - Hardware: Colab T4 (primary) / RTX 4070Ti (secondary)
 - Hyperparameters: LoRA rank=32, lr=2e-4, epochs=3
 - Save checkpoints per epoch, evaluate on held-out test set

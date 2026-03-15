@@ -86,7 +86,7 @@
 
 **Session goal:** Answer 7 critical implementation questions about MCP structure exploitability, SLM capabilities, REPL environments, fine-tuning approaches, and verify all existing citations.
 
-**Method:** 15 web searches covering: MCP JSON schema specification, SLM CoT/tool-calling benchmarks (BFCL, MCPMark, TAU-Bench), MCP scaling for SLMs, DisCIPL verification, THREAD verification, CodeAct analysis, REPL alternatives for agents, fine-tuning vs prompting vs scaffolding, SLM HumanEval benchmarks, xLAM function calling, GRPO/RL for tool calling, knowledge distillation approaches, MCP dynamic/lazy loading, and Qwen2.5-Coder capabilities.
+**Method:** 15 web searches covering: MCP JSON schema specification, SLM CoT/tool-calling benchmarks (BFCL, MCPMark, TAU-Bench), MCP scaling for SLMs, DisCIPL verification, THREAD verification, CodeAct analysis, REPL alternatives for agents, fine-tuning vs prompting vs scaffolding, SLM HumanEval benchmarks, xLAM function calling, GRPO/RL for tool calling, knowledge distillation approaches, MCP dynamic/lazy loading, and Qwen3.5 capabilities.
 
 ### Key Findings
 
@@ -94,14 +94,14 @@
 2. **Nobody has done exactly what we're proposing** — xLAM approached function calling differently (purpose-built, no REPL); no RLM+MCP+SLM work exists.
 3. **xLAM-1B surpasses GPT-3.5 on function calling** — proves 1B models can learn tool use with enough targeted data (60K examples via APIGen).
 4. **GRPO (RL with verifiable rewards) is a strong alternative to SFT** — perfect for MCP tool selection where rewards are programmatically verifiable.
-5. **Qwen2.5-Coder-3B is the optimal primary model** — ~80% HumanEval, Unsloth-supported, GRPO-compatible, tool calling supported.
+5. **Qwen3.5-4B is the optimal primary model** — strong coding performance, Unsloth-supported, GRPO-compatible, tool calling supported.
 6. **All major citations verified** — DisCIPL (arXiv:2504.07081, COLM 2025), THREAD (NAACL 2025), CodeAct (arXiv:2402.01030).
 
 ### Deliverables Created
 - `research/implementation_research_q_and_a.md` — Full answers to 7 questions with citations and implementation roadmap
 
 ### Open Questions
-- What is the actual zero-shot performance of Qwen2.5-Coder-3B on MCP tool selection? (needs empirical testing)
+- What is the actual zero-shot performance of Qwen3.5-4B on MCP tool selection? (needs empirical testing)
 - How much data does GRPO need vs. SFT for acceptable tool selection accuracy?
 - Can the constrained REPL approach (predefined functions) alone match full REPL performance?
 
@@ -141,7 +141,7 @@
 
 2. `configs/repl_config.yaml`
   - Default SLM model updated:
-    - from `qwen2.5-coder:3b`
+    - from `qwen3.5:4b`
     - to `qwen3.5:4b`
 
 3. `src/slm_interface.py`
@@ -241,4 +241,63 @@
 - Stage curated subsets intentionally (`src/*`, config/requirements, selected `results/`) based on repo size policy.
 - Decide whether `data/`, `finetuned/`, and `unsloth_compiled_cache/` should be committed, moved to release assets, or ignored.
 - If committing datasets/artifacts, add versioning notes (generation date, model, and pipeline stage) in a companion manifest.
+
+---
+
+## 2026-03-15 — Benchmark-Aligned Base vs Fine-Tuned Qwen3.5 Evaluation (MCP/RLM Context)
+**Session goal:** Use web-validated benchmark definitions (MCPMark, BFCL, τ²-bench) and run comparable base-vs-finetuned Qwen3.5 evaluations in this repository.
+
+**Method:**
+- Web verification of benchmark protocols and metrics:
+  - MCPMark docs + intro (task scope, pass@1 / pass@K / pass^K / avg@K, 127-task benchmark)
+  - BFCL leaderboard + BFCL evaluation methodology (multi-turn, multi-step, state + response checks)
+  - τ²-bench repo + OpenReview paper page (pass^k reliability metric, dual-control agent-user-tool setup)
+- Local execution in `astro` env:
+  - Ran base model benchmark matrix via `src/run_hf_comparison.py` (single-model mode)
+  - Ran fine-tuned LoRA benchmark matrix via separate process to avoid GPU memory carry-over
+  - Generated `results/hf_base_vs_finetuned_comparison.json`
+
+### Findings
+
+1. **Benchmark protocol alignment (web-validated)**
+- **MCPMark** focuses on MCP-native, verifiable task completion across service environments and reports pass-based aggregate metrics (pass@1 / pass@K / pass^K / avg@K). 🟢 EMPIRICAL
+- **BFCL** emphasizes function/tool correctness under single-turn + multi-turn settings; newer variants include state-aware correctness in multi-step trajectories. 🟢 EMPIRICAL
+- **τ²-bench** evaluates tool-agent-user interaction reliability and explicitly uses **pass^k** to capture consistency across repeated trials. 🟢 EMPIRICAL
+
+2. **Metric mapping from our repo to external benchmarks**
+- `tool_selection_accuracy` ≈ tool-call selection correctness (closest to core FC accuracy dimensions in BFCL/MCPMark). 🟡 ANALYTICAL
+- `parameter_correctness` ≈ argument/schema correctness (BFCL-style argument fidelity). 🟡 ANALYTICAL
+- `end_to_end_accuracy` ≈ pass@1-like success proxy for one run per task (not identical, but closest local equivalent). 🟡 ANALYTICAL
+- `repl_code_validity` captures executable trajectory quality (closest to RLM/CodeAct-style execution robustness, complementary to pass metrics). 🟡 ANALYTICAL
+- `failure_rate` is a practical reliability failure proxy (inverse signal to pass-style metrics). 🟡 ANALYTICAL
+
+3. **Base vs Fine-tuned (Qwen3.5) — observed deltas (small_10 + medium_25 matrix)**
+- **Level 1 (constrained REPL)** improved most after fine-tuning:
+  - `small_10`: TSA +0.2857, RCV +0.2897, failure -0.2857
+  - `medium_25`: TSA +0.0833, RCV +0.1125
+- **Level 0 (no REPL)** remained flat or slightly worse on parameter correctness (as expected: this level does not exploit REPL trajectory learning).
+- **Level 2 (few-shot REPL)** showed mixed behavior: RCV slightly improved, but TSA/E2E dropped on this sample.
+
+4. **Interpretation for MCP+RLM context management**
+- Fine-tuning on grounded trajectories appears to primarily strengthen **execution discipline and stability in constrained REPL loops** (Level 1), which is the key RLM bottleneck addressed by this project.
+- Gains are not uniformly distributed across prompt regimes; additional data curation should prioritize Level-2-style trajectory diversity and hard cases.
+
+### Artifacts Produced
+- `results/hf_base_qwen35_4b_summary.json`
+- `results/hf_finetuned_qwen355_4b_summary.json`
+- `results/hf_base_vs_finetuned_comparison.json`
+
+### Open Questions
+- Convert current single-run `end_to_end_accuracy` into true pass^k-style reliability by running repeated trials per query/config.
+- Add state-based end-state checks (BFCL-style) for richer multi-turn evaluation beyond FINAL extraction.
+- Add MCPMark-compatible task wrappers for direct external benchmark comparability.
+
+### Sources
+- [MCPMark Docs, 2026] "MCPMark Introduction" — https://mcpmark.ai/docs/introduction
+- [MCPMark, 2026] "MCPMark Homepage" — https://mcpmark.ai
+- [Patil et al., 2025] "BFCL Leaderboard" — https://gorilla.cs.berkeley.edu/leaderboard.html
+- [Mao et al., 2024] "BFCL V3 Multi-Turn & Multi-Step Evaluation" — https://gorilla.cs.berkeley.edu/blogs/13_bfcl_v3_multi_turn.html
+- [Barres et al., 2025] "τ²-bench GitHub" — https://github.com/sierra-research/tau2-bench
+- [Yao et al., 2025] "τ-bench (ICLR 2025)" — https://openreview.net/forum?id=roNSXZpUDN
+
 

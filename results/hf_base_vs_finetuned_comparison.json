@@ -1,0 +1,176 @@
+{
+  "level0_small_10": {
+    "base": {
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 0.7143,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.7143,
+      "avg_turns": 1.0,
+      "failure_rate": 0.0,
+      "context_savings_pct": 1.0,
+      "total_queries": 7,
+      "elapsed_seconds": 54.0
+    },
+    "finetuned": {
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 0.7143,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.7143,
+      "avg_turns": 1.0,
+      "failure_rate": 0.0,
+      "context_savings_pct": 1.0,
+      "total_queries": 7,
+      "elapsed_seconds": 81.5
+    },
+    "delta_tsa": 0.0,
+    "delta_pc": 0.0,
+    "delta_rcv": 0.0,
+    "delta_e2e": 0.0,
+    "delta_fail": 0.0
+  },
+  "level0_medium_25": {
+    "base": {
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 0.75,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.75,
+      "avg_turns": 1.0,
+      "failure_rate": 0.0,
+      "context_savings_pct": 1.0,
+      "total_queries": 12,
+      "elapsed_seconds": 113.9
+    },
+    "finetuned": {
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 0.6667,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.6667,
+      "avg_turns": 1.0,
+      "failure_rate": 0.0,
+      "context_savings_pct": 1.0,
+      "total_queries": 12,
+      "elapsed_seconds": 121.6
+    },
+    "delta_tsa": 0.0,
+    "delta_pc": -0.0833,
+    "delta_rcv": 0.0,
+    "delta_e2e": -0.0833,
+    "delta_fail": 0.0
+  },
+  "level1_small_10": {
+    "base": {
+      "tool_selection_accuracy": 0.5714,
+      "parameter_correctness": 0.5714,
+      "repl_code_validity": 0.7103,
+      "end_to_end_accuracy": 0.5714,
+      "avg_turns": 6.43,
+      "failure_rate": 0.4286,
+      "context_savings_pct": 1.0,
+      "total_queries": 7,
+      "elapsed_seconds": 466.9
+    },
+    "finetuned": {
+      "tool_selection_accuracy": 0.8571,
+      "parameter_correctness": 0.7143,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.7143,
+      "avg_turns": 5.14,
+      "failure_rate": 0.1429,
+      "context_savings_pct": 1.0,
+      "total_queries": 7,
+      "elapsed_seconds": 151.8
+    },
+    "delta_tsa": 0.2857,
+    "delta_pc": 0.1429,
+    "delta_rcv": 0.2897,
+    "delta_e2e": 0.1429,
+    "delta_fail": -0.2857
+  },
+  "level1_medium_25": {
+    "base": {
+      "tool_selection_accuracy": 0.75,
+      "parameter_correctness": 0.75,
+      "repl_code_validity": 0.8875,
+      "end_to_end_accuracy": 0.75,
+      "avg_turns": 4.42,
+      "failure_rate": 0.0833,
+      "context_savings_pct": 1.0,
+      "total_queries": 12,
+      "elapsed_seconds": 485.8
+    },
+    "finetuned": {
+      "tool_selection_accuracy": 0.8333,
+      "parameter_correctness": 0.75,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.75,
+      "avg_turns": 4.83,
+      "failure_rate": 0.0833,
+      "context_savings_pct": 1.0,
+      "total_queries": 12,
+      "elapsed_seconds": 223.3
+    },
+    "delta_tsa": 0.0833,
+    "delta_pc": 0.0,
+    "delta_rcv": 0.1125,
+    "delta_e2e": 0.0,
+    "delta_fail": 0.0
+  },
+  "level2_small_10": {
+    "base": {
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 1.0,
+      "repl_code_validity": 0.9643,
+      "end_to_end_accuracy": 1.0,
+      "avg_turns": 3.57,
+      "failure_rate": 0.0,
+      "context_savings_pct": 1.0,
+      "total_queries": 7,
+      "elapsed_seconds": 229.0
+    },
+    "finetuned": {
+      "tool_selection_accuracy": 0.8571,
+      "parameter_correctness": 0.8571,
+      "repl_code_validity": 0.9857,
+      "end_to_end_accuracy": 0.8571,
+      "avg_turns": 4.57,
+      "failure_rate": 0.1429,
+      "context_savings_pct": 1.0,
+      "total_queries": 7,
+      "elapsed_seconds": 128.9
+    },
+    "delta_tsa": -0.1429,
+    "delta_pc": -0.1429,
+    "delta_rcv": 0.0214,
+    "delta_e2e": -0.1429,
+    "delta_fail": 0.1429
+  },
+  "level2_medium_25": {
+    "base": {
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 1.0,
+      "repl_code_validity": 0.9514,
+      "end_to_end_accuracy": 1.0,
+      "avg_turns": 3.25,
+      "failure_rate": 0.0,
+      "context_savings_pct": 1.0,
+      "total_queries": 12,
+      "elapsed_seconds": 356.4
+    },
+    "finetuned": {
+      "tool_selection_accuracy": 0.9167,
+      "parameter_correctness": 0.9167,
+      "repl_code_validity": 0.9708,
+      "end_to_end_accuracy": 0.9167,
+      "avg_turns": 4.08,
+      "failure_rate": 0.0833,
+      "context_savings_pct": 1.0,
+      "total_queries": 12,
+      "elapsed_seconds": 196.3
+    },
+    "delta_tsa": -0.0833,
+    "delta_pc": -0.0833,
+    "delta_rcv": 0.0194,
+    "delta_e2e": -0.0833,
+    "delta_fail": 0.0833
+  }
+}

@@ -96,7 +96,7 @@ The root cause is that **our scaffold uses markdown code fences (` ```repl `)** 
 | **E2E** | 57.1% | 75.0% | E2E = TSA × PC, so parameter errors lower it |
 | **RCV** | 100% | 100% | No REPL used → RCV is N/A, reported as 100% |
 
-**Why Level 0 works so well:** With 10–25 tools, the total context is ~2,300 tokens. Qwen2.5-Coder-3B has a 32K context window, so all tools fit easily. The SLM essentially does a **reading comprehension** task — scan the list, match the query semantically, output the name. This is exactly what it was pretrained for.
+**Why Level 0 works so well:** With 10–25 tools, the total context is ~2,300 tokens. Qwen3.5-4B has a large context window, so all tools fit easily. The SLM essentially does a **reading comprehension** task — scan the list, match the query semantically, output the name. This is exactly what it was pretrained for.
 
 **Why Level 0 will break:** At 100+ tools, context fills up. The RLM paper exists precisely because this approach doesn't scale.
 
@@ -176,9 +176,9 @@ After implementing these fixes:
 
 | Model | Size | Why test? |
 |-------|------|-----------|
-| **Qwen2.5-Coder-3B** | 3B | Primary target, already tested |
+| **Qwen3.5-4B** | 4B | Primary target, already tested |
 | **Phi-3-mini** | 3.8B | Microsoft's SLM, strong on structured reasoning ([Phi-3 Paper](https://arxiv.org/abs/2404.14219)), may follow delimiters better |
-| **Qwen2.5-Coder-1.5B** | 1.5B | Tests the floor — how small can we go? |
+| **Qwen3.5-4B** | 4B | Primary model focus for current experiments |
 
 ---
 

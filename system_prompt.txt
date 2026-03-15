@@ -67,7 +67,7 @@ HARD CONSTRAINTS (DO NOT VIOLATE)
    - Google Colab free tier (T4 GPU)
    - RTX 4070Ti (12GB VRAM, available via team member)
    - No cloud budget
-5. MODEL LIMITS: Only open-source models — Qwen2.5, Phi-3/4, Llama 3.x, SmolLM, Gemma. No proprietary API dependencies in the final system.
+5. MODEL LIMITS: Only open-source models — Qwen3.5, Phi-3/4, Llama 3.x, SmolLM, Gemma. No proprietary API dependencies in the final system.
 6. FINE-TUNING: LoRA/QLoRA only. Max ~3B parameter models on available hardware.
 7. API LIMITS: Free-tier APIs only (Groq, Together.ai free tier, local Ollama).
 8. QUANTIFY: Don't say "this is feasible" — say "this requires X GB VRAM, Y hours on T4, Z API calls."
@@ -118,5 +118,5 @@ QUICK START FOR NEW TEAM MEMBERS
 4. Then start your task. Example prompts:
    - "Run the /deep-research workflow on [topic]."
    - "Run the /paper-analysis workflow on references/RLM.pdf."
-   - "Assess the feasibility of fine-tuning Qwen2.5-3B on synthetic RLM trajectories using our hardware."
+   - "Assess the feasibility of fine-tuning Qwen3.5-4B on synthetic RLM trajectories using our hardware."
    - "What are the open questions in research/RESEARCH_LOG.md? Pick the most impactful one and research it."

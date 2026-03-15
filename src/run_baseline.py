@@ -73,7 +73,7 @@ def filter_test_cases(
 def run_evaluation(
     level: int,
     registry_name: str,
-    model_name: str = "qwen2.5-coder:3b",
+    model_name: str = "qwen3.5:4b",
     verbose: bool = True,
 ):
     """
@@ -137,7 +137,7 @@ def run_evaluation(
     return metrics, results
 
 
-def run_all(model_name: str = "qwen2.5-coder:3b"):
+def run_all(model_name: str = "qwen3.5:4b"):
     """Run all baseline evaluations (Levels 0, 1, 2 × registry sizes)."""
     registries = ["small_10", "medium_25", "large_50"]
     levels = [0, 1, 2]
@@ -179,7 +179,7 @@ def main():
         epilog="""
 Examples:
   python -m src.run_baseline --level 1 --registry small_10
-  python -m src.run_baseline --level 0 --level 1 --registry medium_25 --model qwen2.5-coder:3b
+    python -m src.run_baseline --level 0 --level 1 --registry medium_25 --model qwen3.5:4b
   python -m src.run_baseline --all
         """,
     )
@@ -193,8 +193,8 @@ Examples:
         help="Tool registry size to use",
     )
     parser.add_argument(
-        "--model", type=str, default="qwen2.5-coder:3b",
-        help="Ollama model name (default: qwen2.5-coder:3b)",
+        "--model", type=str, default="qwen3.5:4b",
+        help="Ollama model name (default: qwen3.5:4b)",
     )
     parser.add_argument(
         "--all", action="store_true",

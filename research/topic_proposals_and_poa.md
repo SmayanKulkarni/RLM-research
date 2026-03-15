@@ -78,7 +78,7 @@ Topic 1 is the strongest because it:
   - Define the interaction protocol (how SLM communicates with REPL)
 - [ ] Define the system prompt for SLMs (simplified version of RLM paper's prompt)
 - [ ] Design the synthetic trajectory format (input format for fine-tuning)
-- [ ] Select target SLMs: Phi-3-mini (3.8B), Qwen2.5-3B, Gemma-2-2B (minimum 3 model families)
+- [ ] Select target SLMs: Phi-3-mini (3.8B), Qwen3.5-4B, Gemma-2-2B (minimum 3 model families)
 
 ### Phase 2: Synthetic Data Generation (Weeks 4–5)
 - [ ] Set up MCP server instance(s) with diverse tool configurations
@@ -100,7 +100,7 @@ Topic 1 is the strongest because it:
   - RTX 4070Ti (validation/secondary)
 - [ ] Fine-tune target models:
   - Phi-3-mini (3.8B) — Microsoft's coding-focused SLM
-  - Qwen2.5-3B — Strong multilingual + coding
+  - Qwen3.5-4B — Strong multilingual + coding
   - Gemma-2-2B — Google's efficient SLM (minimum size test)
 - [ ] Hyperparameter search: LoRA rank (16, 32, 64), learning rate, epochs
 - [ ] Save checkpoints and evaluate on validation set after each epoch
@@ -151,7 +151,7 @@ Topic 1 is the strongest because it:
 **Fine-tuning feasibility (validated):**
 - Unsloth + QLoRA can fine-tune 3B models on T4 with 8GB VRAM usage
 - Training time: ~2–4 hours for 10K examples
-- Supports Phi-3, Qwen2.5, Llama-3.2, Gemma-2
+- Supports Phi-3, Qwen3.5, Llama-3.2, Gemma-2
 
 ### API Cost Estimation
 
@@ -199,7 +199,7 @@ Topic 1 is the strongest because it:
 
 ### Key Assumptions
 1. Groq free tier remains available (currently: 14,400 requests/day, Llama-3.1-70B)
-2. Unsloth supports chosen models (Phi-3, Qwen2.5, Gemma-2 already confirmed)
+2. Unsloth supports chosen models (Phi-3, Qwen3.5, Gemma-2 already confirmed)
 3. MCP Python SDK allows programmatic tool description extraction
 4. The team can allocate ~20 hours/week to the project for 8–10 weeks
 

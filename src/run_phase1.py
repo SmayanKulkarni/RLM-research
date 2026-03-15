@@ -79,7 +79,7 @@ def run_single_eval(level, registry_name, slm, all_cases):
 def main():
     print("=" * 60)
     print("  PHASE 1: BASELINE EVALUATION")
-    print(f"  Model: qwen2.5-coder:3b")
+    print(f"  Model: qwen3.5:4b")
     print(f"  Time: {datetime.now().isoformat()}")
     print("=" * 60)
 
@@ -87,13 +87,13 @@ def main():
     # Level 0 (zero-shot): no stop sequences needed (no REPL)
     # Level 1/2: stop sequences enforce turn-taking at </code>
     slm_level0 = SLMInterface(SLMConfig(
-        model_name="qwen2.5-coder:3b",
+        model_name="qwen3.5:4b",
         temperature=0.1,
         max_tokens=2048,
         stop_sequences=[],  # No REPL → no stop sequences
     ))
     slm_repl = SLMInterface(SLMConfig(
-        model_name="qwen2.5-coder:3b",
+        model_name="qwen3.5:4b",
         temperature=0.1,
         max_tokens=2048,
         stop_sequences=["</code>"],  # Enforce turn-taking

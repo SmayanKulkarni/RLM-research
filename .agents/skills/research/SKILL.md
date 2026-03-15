@@ -49,7 +49,7 @@ When asked to research a topic:
 ### Phase 3: Bottleneck & Feasibility Analysis
 When asked to assess feasibility:
 1. **Hardware constraints**: Assume M1 Mac Air (8GB), Google Colab free tier (T4 GPU), RTX 4070Ti (12GB VRAM, available via team member), no cloud budget.
-2. **Model constraints**: Only open-source models (Qwen2.5, Phi-3/4, Llama 3.x, SmolLM, Gemma).
+2. **Model constraints**: Only open-source models (Qwen3.5, Phi-3/4, Llama 3.x, SmolLM, Gemma).
 3. **Fine-tuning constraints**: LoRA/QLoRA only, max ~3B parameter models on available hardware.
 4. **API constraints**: Free-tier APIs only (Groq, Together.ai free tier, local Ollama).
 5. **Quantify everything**: Don't say "this is feasible" — say "this requires X GB VRAM, Y hours on T4, Z API calls at $W cost."

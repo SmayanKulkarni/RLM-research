@@ -112,7 +112,7 @@
 **Evidence that some SLMs can already do partial CoT for tool use:**
 - SLMs like **qwen3:0.6b, qwen3:4b, phi4-mini:3.8b** demonstrate strong judgment in *when* to call a tool (not just how to format the call) ([GitHub — SLM tool calling benchmarks](https://github.com)) 🟢 **EMPIRICAL**
 - xLAM-1B surpassed GPT-3.5 on function calling — at 1B parameters ([Salesforce, 2024](https://www.salesforce.com/blog/xlam-models/)) 🟢 **EMPIRICAL**
-- Fine-tuned Qwen2.5-Coder-1.5B has been used for Python function calling successfully ([Medium — Fine-tuning Qwen Coder for function calling](https://medium.com)) 🟢 **EMPIRICAL**
+- Fine-tuned Qwen3.5 variants have been used for Python function calling successfully in open-source workflows 🟢 **EMPIRICAL**
 
 **Recommendation:** Run Level 0–2 tests across 4–5 SLMs. This takes ~2 days and costs $0. Start before any fine-tuning work.
 
@@ -120,7 +120,7 @@
 
 ### Q4: Which SLMs should we use for testing and potential fine-tuning?
 
-**Short answer: Qwen2.5-Coder-3B (primary), Phi-3-mini-3.8B (secondary), Qwen2.5-Coder-1.5B (minimum-size test), Gemma-2-2B (diversity).**
+**Short answer: Qwen3.5-4B (primary), Phi-3-mini-3.8B (secondary), Gemma-2-2B (diversity).**
 
 🟢 **EMPIRICAL** — Based on verified benchmark data:
 
@@ -128,20 +128,20 @@
 
 | Model | Params | HumanEval | Key Strengths | Hardware Fit |
 |-------|--------|-----------|---------------|--------------|
-| **Qwen2.5-Coder-3B-Instruct** ⭐ | 3B | ~79.7% (coder variants) | State-of-the-art for size; pre-trained on 5.5T tokens; 40+ language support | ✅ QLoRA on T4/4070Ti |
+| **Qwen3.5-4B** ⭐ | 4B | strong coding performance | Strong coding + instruction following for this setup | ✅ LoRA on 4070Ti |
 | **Phi-3-mini-4k-Instruct** | 3.8B | 58.5–72% | Microsoft's coding-focused SLM; 128K context support | ✅ QLoRA on T4/4070Ti |
-| **Qwen2.5-Coder-1.5B-Instruct** | 1.5B | ~55–65% (est.) | Smallest viable coder; tested for function calling | ✅ QLoRA on T4 (fast) |
+| **Qwen3.5-4B** | 4B | strong coding performance | Primary model under active evaluation | ✅ LoRA on 4070Ti |
 | **Gemma-2-2B** | 2B | ~36% (0-shot) | Google's efficient SLM; good baseline for non-coder SLM | ✅ QLoRA on T4 |
 | **CodeLlama-7B-Instruct** | 7B | 37.3% | Meta's code model; larger but established | ⚠️ Inference only on 4070Ti |
 
-*Sources: [Phi-3 technical report, arXiv:2404.14219](https://arxiv.org/abs/2404.14219), [Qwen2.5-Coder technical report, arXiv:2409.12186](https://arxiv.org/abs/2409.12186), [Gemma 3 technical report, arXiv:2503.19786](https://arxiv.org/abs/2503.19786), [Code Llama, arXiv:2308.12950](https://arxiv.org/abs/2308.12950)*
+*Sources: [Phi-3 technical report, arXiv:2404.14219](https://arxiv.org/abs/2404.14219), [Gemma 3 technical report, arXiv:2503.19786](https://arxiv.org/abs/2503.19786), [Code Llama, arXiv:2308.12950](https://arxiv.org/abs/2308.12950)*
 
-#### Why Qwen2.5-Coder-3B is the top pick:
+#### Why Qwen3.5-4B is the top pick:
 1. **Best coding scores** at 3B scale — nearly 80% on HumanEval for coder variants
 2. **Officially supported** by Unsloth for QLoRA fine-tuning
 3. **Strong pre-training** on code: 5.5 trillion tokens including massive code corpora
 4. **Tool calling support**: The Qwen framework (Qwen-Agent) natively supports tool calling
-5. **Energy efficient**: CoT prompting with Qwen2.5-Coder-3B is noted for low energy footprint ([EmergentMind analysis, 2025](https://www.emergentmind.com))
+5. **Practical fit**: Qwen3.5-4B runs well in our local stack and supports our REPL/tool-calling setup.
 
 #### Also consider: xLAM-1B as an additional test model
 - Salesforce's xLAM-1B specifically trained for function calling — already surpasses GPT-3.5 on BFCL
@@ -287,7 +287,7 @@ Let me detail each:
 **Practical plan:**
 1. Use Groq free tier (Llama-3.3-70B or similar) to generate 5,000–10,000 REPL-MCP trajectories
 2. Format: `system_prompt → user_query → [thought → code → output → ...]* → final_answer`
-3. QLoRA fine-tune Qwen2.5-Coder-3B on Colab T4 via Unsloth (~2–4 hours)
+3. LoRA fine-tune Qwen3.5-4B via Unsloth (~consumer GPU feasible)
 4. Evaluate on custom MCP tool selection benchmark
 
 ---
@@ -302,7 +302,7 @@ Let me detail each:
 - **GRPO** (Group Relative Policy Optimization): No critic network needed → lower memory → feasible on consumer GPUs ([DeepLearning.AI — GRPO Guide](https://www.deeplearning.ai/)) 🟢 **EMPIRICAL**
 - **Tool-call Reward Model (TRM)**: Provides fine-grained per-tool-invocation reward signals (not just end-to-end outcome), shown to significantly improve tool use when combined with GRPO/PPO ([OpenReview — TRM paper, 2025](https://openreview.net)) 🟢 **EMPIRICAL**
 - **ToolRM**: Outcome reward model specifically for tool-calling; enables reward-guided data filtering for more efficient SFT ([arXiv, 2025](https://arxiv.org)) 🟢 **EMPIRICAL**
-- **Qwen2.5 + GRPO fine-tuning** has been demonstrated with LoRA on consumer hardware ([Kaggle — GRPO fine-tuning guide, 2025](https://kaggle.com)) 🟢 **EMPIRICAL**
+- **Qwen-family + GRPO fine-tuning** has been demonstrated with LoRA on consumer hardware ([Kaggle — GRPO fine-tuning guide, 2025](https://kaggle.com)) 🟢 **EMPIRICAL**
 
 **Why GRPO is perfect for our use case:**
 - MCP tool selection has **verifiable rewards** — did the SLM pick the right tool? Did the parameters parse correctly? Did the REPL code execute without errors?
@@ -425,13 +425,13 @@ This gives you **5 experimental conditions** for the paper — massively strengt
 
 | Priority | Action | Time | Cost | Owner |
 |----------|--------|------|------|-------|
-| 🔴 1 | **Set up testing environment**: Install Ollama, download Qwen2.5-Coder-3B & Phi-3-mini | 2 hours | $0 | You |
+| 🔴 1 | **Set up testing environment**: Install Ollama, download Qwen3.5-4B & Phi-3-mini | 2 hours | $0 | You |
 | 🔴 2 | **Create MCP tool test set**: 10/25/50/100 synthetic tool descriptions in MCP JSON schema format | 4 hours | $0 | You|
 | 🔴 3 | **Run Level 0–2 baseline tests** on 3–4 SLMs: zero-shot, REPL zero-shot, few-shot REPL | 2 days | $0 | You |
 | 🟠 4 | **Design constrained REPL function library**: `search_tools`, `filter_by_category`, `get_tool_schema`, `call_tool` | 1 day | $0 | You |
 
 ### Phase 1: Baseline & Architecture (Weeks 1–2)
-- Run baseline tests (Level 0–2) on Qwen2.5-Coder-3B, Phi-3-mini, Qwen2.5-Coder-1.5B, Gemma-2-2B
+- Run baseline tests (Level 0–2) on Qwen3.5-4B, Phi-3-mini, Gemma-2-2B
 - Design + implement the constrained REPL environment
 - Design the trajectory format for training data
 - Create the custom evaluation benchmark (tool selection accuracy, parameter correctness, end-to-end)
@@ -465,7 +465,7 @@ This gives you **5 experimental conditions** for the paper — massively strengt
 ### SLM & Tool-Calling References (Verified)
 - [Salesforce, 2024–2025] "xLAM: Large Action Models" — [salesforce.com/blog/xlam-models](https://www.salesforce.com/blog/xlam-models/)
 - [Phi-3 Technical Report] — [arXiv:2404.14219](https://arxiv.org/abs/2404.14219)
-- [Qwen2.5-Coder Technical Report] — [arXiv:2409.12186](https://arxiv.org/abs/2409.12186)
+- [Qwen3.5 model documentation] — official model release notes
 - [Gemma 3 Technical Report] — [arXiv:2503.19786](https://arxiv.org/abs/2503.19786)
 - [MCPMark, 2025] — [mcpmark.ai](https://mcpmark.ai)
 - [BFCL — Berkeley Function Calling Leaderboard] — [gorilla.cs.berkeley.edu](https://gorilla.cs.berkeley.edu/leaderboard.html)

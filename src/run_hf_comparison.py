@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import json
+import gc
 import sys
 import time
 from pathlib import Path
@@ -139,14 +141,16 @@ def run_matrix(model_label: str, model_name: str) -> dict:
     with open(output_path, "w") as file_handle:
         json.dump(summary, file_handle, indent=2)
 
+    del slm
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
     print("saved", output_path)
     return summary
 
 
-def main():
-    base = run_matrix("base_qwen35_4b", "Qwen/Qwen3.5-4B")
-    finetuned = run_matrix("finetuned_qwen355_4b", "finetuned/qwen3.55-4b-rlm-lora")
-
+def write_comparison(base: dict, finetuned: dict):
     comparison = {}
     for key in base:
         if key not in finetuned:
@@ -165,6 +169,32 @@ def main():
     with open(cmp_path, "w") as file_handle:
         json.dump(comparison, file_handle, indent=2)
     print("saved", cmp_path)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Run HF base vs finetuned benchmark comparisons")
+    parser.add_argument("--model-label", type=str, default=None)
+    parser.add_argument("--model-name", type=str, default=None)
+    parser.add_argument("--compare-only", action="store_true")
+    parser.add_argument("--base-summary", type=str, default="results/hf_base_qwen35_4b_summary.json")
+    parser.add_argument("--finetuned-summary", type=str, default="results/hf_finetuned_qwen355_4b_summary.json")
+    args = parser.parse_args()
+
+    if args.compare_only:
+        with open(PROJECT_ROOT / args.base_summary) as file_handle:
+            base = json.load(file_handle)
+        with open(PROJECT_ROOT / args.finetuned_summary) as file_handle:
+            finetuned = json.load(file_handle)
+        write_comparison(base, finetuned)
+        return
+
+    if args.model_label and args.model_name:
+        run_matrix(args.model_label, args.model_name)
+        return
+
+    base = run_matrix("base_qwen35_4b", "Qwen/Qwen3.5-4B")
+    finetuned = run_matrix("finetuned_qwen355_4b", "finetuned/qwen3.55-4b-rlm-lora")
+    write_comparison(base, finetuned)
 
 
 if __name__ == "__main__":

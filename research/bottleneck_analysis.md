@@ -71,7 +71,7 @@ SLMs (1B–7B parameters) cannot effectively use MCP (Model Context Protocol) se
 - RLM paper Section 5: "Models without sufficient coding capabilities struggle as RLMs"
 - Phi-1 (1.3B): 50% on HumanEval — basic Python only
 - Phi-3 Mini (3.8B): Stronger, but still limited for complex REPL interactions
-- Qwen2.5 (7B): Better coding but at the upper end of "small"
+- Qwen3.5 (4B): Better coding while staying in a manageable SLM range
 - Models below 3B: Typically <40% on HumanEval — insufficient for reliable REPL code
 
 **Specific failure modes in RLM context:**
@@ -159,7 +159,7 @@ SLMs (1B–7B parameters) cannot effectively use MCP (Model Context Protocol) se
 **Practical implementation path:**
 1. Use Groq free tier (Llama-3.1-70B) to generate ~5,000–10,000 RLM trajectories for MCP tool selection
 2. Format as instruction-response pairs with the "Thought + Code" pattern
-3. Fine-tune Phi-3-mini (3.8B) or Qwen2.5-3B using QLoRA with Unsloth on Colab T4
+3. Fine-tune Phi-3-mini (3.8B) or Qwen3.5-4B using LoRA with Unsloth on Colab T4
 4. Evaluate on custom MCP tool selection benchmark
 
 **Risks:**
@@ -247,7 +247,7 @@ Sandboxing (as noted in the RLM paper) is essential but adds complexity and cost
 There's likely a **minimum model size** below which the RLM approach provides no benefit because the model simply can't generate useful code. Based on available evidence:
 - **< 1B params:** Almost certainly too small for any meaningful REPL interaction
 - **1B–3B params:** Marginal — may work with heavy constrained generation (predefined scripts) or fine-tuning
-- **3B–7B params:** Most promising range — models like Phi-3 Mini (3.8B), Qwen2.5-3B show adequate coding
+- **3B–7B params:** Most promising range — models like Phi-3 Mini (3.8B), Qwen3.5-4B show adequate coding
 - **> 7B params:** Increasingly capable but pushing the boundary of "small"
 
 Our paper should empirically determine this threshold.
