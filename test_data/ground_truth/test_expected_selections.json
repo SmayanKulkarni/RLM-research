@@ -1,0 +1,26 @@
+[
+  {
+    "query": "What's the weather like in London right now?",
+    "expected_tool": "get_weather",
+    "expected_params": {
+      "city": "London"
+    }
+  },
+  {
+    "query": "What's Apple's current stock price?",
+    "expected_tool": "get_stock_price",
+    "expected_params": {
+      "symbol": "AAPL"
+    }
+  },
+  {
+    "query": "I want to save some data as a zip file for backup",
+    "expected_tool": "compress_files",
+    "expected_params": {}
+  },
+  {
+    "query": "What machine learning capabilities are available?",
+    "expected_tool": "DISCOVERY",
+    "expected_params": {}
+  }
+]

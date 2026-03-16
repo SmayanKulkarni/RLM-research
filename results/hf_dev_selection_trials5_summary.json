@@ -1,0 +1,25 @@
+{
+  "comparison_file": "results/hf_base_vs_finetuned_comparison.json",
+  "cells": 6,
+  "macro_delta": {
+    "delta_tsa": -0.2222,
+    "delta_pc": -0.5556,
+    "delta_e2e": -0.5556,
+    "delta_fail": 0.0555,
+    "delta_pass_at_1": -0.5556,
+    "delta_pass_at_k": -0.5556,
+    "delta_pass_power_k_proxy": -0.5556
+  },
+  "significance_flags": {
+    "excludes_zero": 11,
+    "total": 42
+  },
+  "per_cell": [
+    "level0_small_10: delta_tsa=+0.0000, delta_pc=-1.0000, delta_e2e=-1.0000, delta_fail=+0.0000, delta_pass_at_1=-1.0000, delta_pass_at_k=-1.0000, delta_pass_power_k_proxy=-1.0000",
+    "level0_medium_25: delta_tsa=+0.0000, delta_pc=-0.6667, delta_e2e=-0.6667, delta_fail=+0.0000, delta_pass_at_1=-0.6667, delta_pass_at_k=-0.6667, delta_pass_power_k_proxy=-0.6667",
+    "level1_small_10: delta_tsa=+0.0000, delta_pc=+0.0000, delta_e2e=+0.0000, delta_fail=+0.0000, delta_pass_at_1=+0.0000, delta_pass_at_k=+0.0000, delta_pass_power_k_proxy=+0.0000",
+    "level1_medium_25: delta_tsa=+0.0000, delta_pc=+0.0000, delta_e2e=+0.0000, delta_fail=+0.3333, delta_pass_at_1=+0.0000, delta_pass_at_k=+0.0000, delta_pass_power_k_proxy=+0.0000",
+    "level2_small_10: delta_tsa=-1.0000, delta_pc=-1.0000, delta_e2e=-1.0000, delta_fail=+0.0000, delta_pass_at_1=-1.0000, delta_pass_at_k=-1.0000, delta_pass_power_k_proxy=-1.0000",
+    "level2_medium_25: delta_tsa=-0.3333, delta_pc=-0.6667, delta_e2e=-0.6667, delta_fail=+0.0000, delta_pass_at_1=-0.6667, delta_pass_at_k=-0.6667, delta_pass_power_k_proxy=-0.6667"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "total": 1617,
+  "splits": {
+    "train": 1609,
+    "dev": 8
+  },
+  "registries": {
+    "small_10": 197,
+    "medium_25": 555,
+    "large_50": 865
+  },
+  "trajectory_kinds": {
+    "positive": 1200,
+    "correction": 417
+  },
+  "min_positive_per_registry_tool": 7,
+  "max_positive_per_registry_tool": 67,
+  "unique_registry_tool_pairs": 84,
+  "source_rows": {
+    "data/trajectories_verified.jsonl": 117,
+    "data/trajectories_augmented.jsonl": 388
+  },
+  "generated_paraphrases": 151,
+  "generated_corrections": 417,
+  "preference_pairs": 417
+}

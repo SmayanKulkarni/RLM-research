@@ -52,28 +52,55 @@ def load_test_cases() -> list[QueryTestCase]:
     return MCPToolEvaluator.load_test_cases(queries_path, gt_path)
 
 
+def resolve_eval_paths(query_split: str) -> tuple[Path, Path]:
+    """Resolve query and ground-truth file paths for a split."""
+    if query_split == "all":
+        queries_path = PROJECT_ROOT / "test_data" / "queries" / "all_queries.json"
+        gt_path = PROJECT_ROOT / "test_data" / "ground_truth" / "expected_selections.json"
+    else:
+        queries_path = PROJECT_ROOT / "test_data" / "queries" / f"{query_split}_queries.json"
+        gt_path = PROJECT_ROOT / "test_data" / "ground_truth" / f"{query_split}_expected_selections.json"
+
+    return queries_path, gt_path
+
+
 def filter_test_cases(
     cases: list[QueryTestCase],
     registry: MCPToolRegistry,
-    include_discovery: bool = False,
+    task_mode: str = "selection",
 ) -> list[QueryTestCase]:
     """Filter test cases to only include those with tools in the registry."""
     available = set(registry.list_names())
     filtered = []
     for case in cases:
-        if case.expected_tool == "DISCOVERY":
-            if include_discovery:
-                filtered.append(case)
+        is_discovery = case.expected_tool == "DISCOVERY" or case.category == "discovery"
+
+        if task_mode == "selection" and is_discovery:
             continue
+        if task_mode == "discovery" and not is_discovery:
+            continue
+
+        if is_discovery:
+            filtered.append(case)
+            continue
+
         if case.expected_tool in available:
             filtered.append(case)
+
     return filtered
+
+
+def _task_mode_suffix(task_mode: str) -> str:
+    return "" if task_mode == "selection" else f"_{task_mode}"
 
 
 def run_evaluation(
     level: int,
     registry_name: str,
     model_name: str = "qwen3.5:4b",
+    query_split: str = "all",
+    trials: int = 1,
+    task_mode: str = "selection",
     verbose: bool = True,
 ):
     """
@@ -99,8 +126,14 @@ def run_evaluation(
     registry = MCPToolRegistry.from_json_file(registry_path)
 
     # Load and filter test cases
-    all_cases = load_test_cases()
-    cases = filter_test_cases(all_cases, registry)
+    queries_path, gt_path = resolve_eval_paths(query_split)
+    if not queries_path.exists() or not gt_path.exists():
+        print(f"Query split files not found for split='{query_split}'. Generating test data...")
+        from src.generate_test_data import generate_test_data
+        generate_test_data(str(PROJECT_ROOT))
+
+    all_cases = MCPToolEvaluator.load_test_cases(queries_path, gt_path)
+    cases = filter_test_cases(all_cases, registry, task_mode=task_mode)
 
     if not cases:
         print(f"No test cases match the {registry_name} registry. Skipping.")
@@ -127,19 +160,28 @@ def run_evaluation(
 
     # Create evaluator and run
     evaluator = MCPToolEvaluator(scaffold=scaffold, tools_registry=registry)
-    metrics, results = evaluator.evaluate_all(cases, level=level, verbose=verbose)
+    if trials > 1:
+        metrics, results = evaluator.evaluate_repeated(
+            cases,
+            level=level,
+            trials=trials,
+            verbose=verbose,
+        )
+    else:
+        metrics, results = evaluator.evaluate_all(cases, level=level, verbose=verbose)
 
     # Save results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_path = PROJECT_ROOT / "results" / f"level{level}_{registry_name}_{timestamp}.json"
+    mode_suffix = _task_mode_suffix(task_mode)
+    output_path = PROJECT_ROOT / "results" / f"level{level}_{registry_name}{mode_suffix}_{timestamp}.json"
     evaluator.save_results(metrics, results, output_path)
 
     return metrics, results
 
 
-def run_all(model_name: str = "qwen3.5:4b"):
+def run_all(model_name: str = "qwen3.5:4b", task_mode: str = "selection"):
     """Run all baseline evaluations (Levels 0, 1, 2 × registry sizes)."""
-    registries = ["small_10", "medium_25", "large_50"]
+    registries = ["small_10", "medium_25", "large_50", "xlarge_100"]
     levels = [0, 1, 2]
 
     all_metrics = {}
@@ -155,12 +197,19 @@ def run_all(model_name: str = "qwen3.5:4b"):
                     level=level,
                     registry_name=registry_name,
                     model_name=model_name,
+                    query_split="all",
+                    trials=1,
+                    task_mode=task_mode,
                 )
                 if metrics:
                     key = f"level{level}_{registry_name}"
-                    all_metrics[key] = metrics.to_dict()
+                    if isinstance(metrics, dict):
+                        all_metrics[key] = metrics
+                    else:
+                        all_metrics[key] = metrics.to_dict()
             except Exception as e:
                 print(f"  ❌ Error: {e}")
+                filtered.append(case)
                 continue
 
     # Save summary
@@ -197,6 +246,20 @@ Examples:
         help="Ollama model name (default: qwen3.5:4b)",
     )
     parser.add_argument(
+        "--query-split", type=str, default="all",
+        choices=["all", "train", "dev", "test"],
+        help="Which query split to evaluate.",
+    )
+    parser.add_argument(
+        "--trials", type=int, default=1,
+        help="Repeated trials per query for reliability metrics (>=1).",
+    )
+    parser.add_argument(
+        "--task-mode", type=str, default="selection",
+        choices=["selection", "discovery", "mixed"],
+        help="Evaluate selection-only, discovery-only, or mixed query sets.",
+    )
+    parser.add_argument(
         "--all", action="store_true",
         help="Run all levels × all registries",
     )
@@ -217,7 +280,7 @@ Examples:
         return
 
     if args.all:
-        run_all(model_name=args.model)
+        run_all(model_name=args.model, task_mode=args.task_mode)
         return
 
     levels = args.level or [1]
@@ -226,6 +289,9 @@ Examples:
             level=level,
             registry_name=args.registry,
             model_name=args.model,
+            query_split=args.query_split,
+            trials=args.trials,
+            task_mode=args.task_mode,
             verbose=not args.quiet,
         )
 

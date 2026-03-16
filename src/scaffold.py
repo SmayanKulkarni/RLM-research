@@ -131,6 +131,11 @@ class MCPRLMScaffold:
             {"role": "user", "content": user_query},
         ]
         raw_outputs = []
+        discovered = False
+        verified = False
+        recovery_hint_count = 0
+        repeated_code_count = 0
+        last_code_block = None
 
         for turn in range(self.repl.config.max_turns):
             # Get SLM response
@@ -148,8 +153,32 @@ class MCPRLMScaffold:
             # (SLM sometimes puts FINAL inside <code> tags)
             if code_blocks:
                 for code in code_blocks:
+                    if self._is_discovery_code(code):
+                        discovered = True
+                    if self._is_verify_code(code):
+                        verified = True
+
+                    if last_code_block is not None and code.strip() == last_code_block.strip():
+                        repeated_code_count += 1
+                    else:
+                        repeated_code_count = 0
+                    last_code_block = code
+
+                for code in code_blocks:
                     code_final = REPLEngine.extract_final(code, self.repl.namespace)
                     if code_final is not None:
+                        if not verified and recovery_hint_count == 0:
+                            conversation.append({"role": "assistant", "content": response})
+                            conversation.append({
+                                "role": "user",
+                                "content": (
+                                    "Before FINAL, verify candidate tool schema using "
+                                    "tools_registry.get_schema(tool_name). Then provide FINAL with JSON."
+                                ),
+                            })
+                            recovery_hint_count += 1
+                            break
+
                         return ScaffoldResult(
                             query=user_query,
                             answer=code_final,
@@ -167,13 +196,48 @@ class MCPRLMScaffold:
                     result = self.repl.execute(code)
                     repl_output += f"\n[REPL OUTPUT]:\n{result.output}\n"
 
+                if self._is_empty_or_low_signal_output(repl_output) and recovery_hint_count < 2:
+                    conversation.append({"role": "assistant", "content": response})
+                    conversation.append({
+                        "role": "user",
+                        "content": (
+                            "Your previous step returned low-signal output. Use a narrower keyword search, "
+                            "then run get_schema on the top candidate before FINAL."
+                        ),
+                    })
+                    recovery_hint_count += 1
+                    continue
+
                 # Append SLM response + REPL output to conversation
                 conversation.append({"role": "assistant", "content": response})
                 if repl_output.strip():
                     conversation.append({"role": "user", "content": repl_output.strip()})
 
+                if repeated_code_count >= 2 and recovery_hint_count < 2:
+                    conversation.append({
+                        "role": "user",
+                        "content": (
+                            "You are repeating the same code. Move to VERIFY: call get_schema on one "
+                            "candidate and then DECIDE with FINAL JSON."
+                        ),
+                    })
+                    recovery_hint_count += 1
+                    continue
+
             elif final is not None:
                 # No code blocks, but FINAL found → return answer
+                if not verified and recovery_hint_count == 0:
+                    conversation.append({"role": "assistant", "content": response})
+                    conversation.append({
+                        "role": "user",
+                        "content": (
+                            "Before FINAL, complete VERIFY by checking tool schema with get_schema. "
+                            "Then return FINAL with JSON."
+                        ),
+                    })
+                    recovery_hint_count += 1
+                    continue
+
                 return ScaffoldResult(
                     query=user_query,
                     answer=final,
@@ -194,6 +258,19 @@ class MCPRLMScaffold:
                         "or provide your final answer with FINAL(...)."
                     ),
                 })
+
+            if turn >= 5 and recovery_hint_count < 2 and not verified:
+                conversation.append({
+                    "role": "user",
+                    "content": (
+                        "You are in DISCOVER mode too long. Transition now: pick top candidate, "
+                        "verify with get_schema, then output FINAL JSON."
+                    ),
+                })
+                recovery_hint_count += 1
+
+            if turn >= 7 and not verified and recovery_hint_count >= 2:
+                break
 
         # Max turns reached without FINAL
         return ScaffoldResult(
@@ -256,3 +333,30 @@ class MCPRLMScaffold:
     def reset(self, tools_registry: MCPToolRegistry):
         """Reset the REPL for a new task (preserves scaffold config)."""
         self.repl.reset(keep_initial={"tools_registry": tools_registry})
+
+    @staticmethod
+    def _is_discovery_code(code: str) -> bool:
+        code_lc = code.lower()
+        return (
+            "tools_registry.search(" in code_lc
+            or "tools_registry.list_names(" in code_lc
+            or "tools_registry.filter_by_category(" in code_lc
+        )
+
+    @staticmethod
+    def _is_verify_code(code: str) -> bool:
+        return "tools_registry.get_schema(" in code.lower()
+
+    @staticmethod
+    def _is_empty_or_low_signal_output(repl_output: str) -> bool:
+        text = repl_output.lower()
+        if not text.strip():
+            return True
+        low_signal_tokens = [
+            "[]",
+            "none",
+            "(no output)",
+            "0 results",
+            "not found",
+        ]
+        return any(token in text for token in low_signal_tokens)

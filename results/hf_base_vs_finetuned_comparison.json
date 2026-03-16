@@ -2,175 +2,1447 @@
   "level0_small_10": {
     "base": {
       "tool_selection_accuracy": 1.0,
-      "parameter_correctness": 0.7143,
+      "parameter_correctness": 1.0,
       "repl_code_validity": 1.0,
-      "end_to_end_accuracy": 0.7143,
+      "end_to_end_accuracy": 1.0,
       "avg_turns": 1.0,
       "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 7,
-      "elapsed_seconds": 54.0
+      "total_queries": 1,
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_power_k_proxy": 1.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 18.1,
+      "trials": 3
     },
     "finetuned": {
       "tool_selection_accuracy": 1.0,
-      "parameter_correctness": 0.7143,
+      "parameter_correctness": 0.0,
       "repl_code_validity": 1.0,
-      "end_to_end_accuracy": 0.7143,
+      "end_to_end_accuracy": 0.0,
       "avg_turns": 1.0,
       "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 7,
-      "elapsed_seconds": 81.5
+      "total_queries": 1,
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "pass_power_k_proxy": 0.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "pass_at_k": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "pass_power_k_proxy": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ]
+      },
+      "elapsed_seconds": 47.0,
+      "trials": 3
     },
     "delta_tsa": 0.0,
-    "delta_pc": 0.0,
+    "delta_pc": -1.0,
     "delta_rcv": 0.0,
-    "delta_e2e": 0.0,
-    "delta_fail": 0.0
+    "delta_e2e": -1.0,
+    "delta_fail": 0.0,
+    "delta_pass_at_1": -1.0,
+    "delta_pass_at_k": -1.0,
+    "delta_pass_power_k_proxy": -1.0,
+    "significance": {
+      "delta_tsa": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_e2e": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_fail": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_1": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_pass_at_k": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_pass_power_k_proxy": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      }
+    },
+    "paired_significance": {
+      "delta_tsa": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": true
+      },
+      "delta_e2e": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": true
+      }
+    }
   },
   "level0_medium_25": {
     "base": {
       "tool_selection_accuracy": 1.0,
-      "parameter_correctness": 0.75,
+      "parameter_correctness": 1.0,
       "repl_code_validity": 1.0,
-      "end_to_end_accuracy": 0.75,
+      "end_to_end_accuracy": 1.0,
       "avg_turns": 1.0,
       "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 12,
-      "elapsed_seconds": 113.9
+      "total_queries": 3,
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_power_k_proxy": 1.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 72.9,
+      "trials": 3
     },
     "finetuned": {
       "tool_selection_accuracy": 1.0,
-      "parameter_correctness": 0.6667,
+      "parameter_correctness": 0.3333,
       "repl_code_validity": 1.0,
-      "end_to_end_accuracy": 0.6667,
+      "end_to_end_accuracy": 0.3333,
       "avg_turns": 1.0,
       "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 12,
-      "elapsed_seconds": 121.6
+      "total_queries": 3,
+      "pass_at_1": 0.3333,
+      "pass_at_k": 0.3333,
+      "pass_power_k_proxy": 0.3333,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ]
+      },
+      "elapsed_seconds": 124.5,
+      "trials": 3
     },
     "delta_tsa": 0.0,
-    "delta_pc": -0.0833,
+    "delta_pc": -0.6667,
     "delta_rcv": 0.0,
-    "delta_e2e": -0.0833,
-    "delta_fail": 0.0
+    "delta_e2e": -0.6667,
+    "delta_fail": 0.0,
+    "delta_pass_at_1": -0.6667,
+    "delta_pass_at_k": -0.6667,
+    "delta_pass_power_k_proxy": -0.6667,
+    "significance": {
+      "delta_tsa": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_fail": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_1": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_k": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_power_k_proxy": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      }
+    },
+    "paired_significance": {
+      "delta_tsa": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 0.5,
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 0.5,
+        "excludes_zero": false
+      }
+    }
   },
   "level1_small_10": {
     "base": {
-      "tool_selection_accuracy": 0.5714,
-      "parameter_correctness": 0.5714,
-      "repl_code_validity": 0.7103,
-      "end_to_end_accuracy": 0.5714,
-      "avg_turns": 6.43,
-      "failure_rate": 0.4286,
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 1.0,
+      "repl_code_validity": 0.6667,
+      "end_to_end_accuracy": 1.0,
+      "avg_turns": 4.0,
+      "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 7,
-      "elapsed_seconds": 466.9
+      "total_queries": 1,
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_power_k_proxy": 1.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 105.3,
+      "trials": 3
     },
     "finetuned": {
-      "tool_selection_accuracy": 0.8571,
-      "parameter_correctness": 0.7143,
-      "repl_code_validity": 1.0,
-      "end_to_end_accuracy": 0.7143,
-      "avg_turns": 5.14,
-      "failure_rate": 0.1429,
+      "tool_selection_accuracy": 1.0,
+      "parameter_correctness": 1.0,
+      "repl_code_validity": 0.6667,
+      "end_to_end_accuracy": 1.0,
+      "avg_turns": 10.0,
+      "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 7,
-      "elapsed_seconds": 151.8
+      "total_queries": 1,
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_power_k_proxy": 1.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 128.1,
+      "trials": 3
     },
-    "delta_tsa": 0.2857,
-    "delta_pc": 0.1429,
-    "delta_rcv": 0.2897,
-    "delta_e2e": 0.1429,
-    "delta_fail": -0.2857
+    "delta_tsa": 0.0,
+    "delta_pc": 0.0,
+    "delta_rcv": 0.0,
+    "delta_e2e": 0.0,
+    "delta_fail": 0.0,
+    "delta_pass_at_1": 0.0,
+    "delta_pass_at_k": 0.0,
+    "delta_pass_power_k_proxy": 0.0,
+    "significance": {
+      "delta_tsa": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_fail": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_1": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_k": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_power_k_proxy": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      }
+    },
+    "paired_significance": {
+      "delta_tsa": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      }
+    }
   },
   "level1_medium_25": {
     "base": {
-      "tool_selection_accuracy": 0.75,
-      "parameter_correctness": 0.75,
-      "repl_code_validity": 0.8875,
-      "end_to_end_accuracy": 0.75,
-      "avg_turns": 4.42,
-      "failure_rate": 0.0833,
+      "tool_selection_accuracy": 0.6667,
+      "parameter_correctness": 0.6667,
+      "repl_code_validity": 0.6056,
+      "end_to_end_accuracy": 0.6667,
+      "avg_turns": 5.0,
+      "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 12,
-      "elapsed_seconds": 485.8
+      "total_queries": 3,
+      "pass_at_1": 0.6667,
+      "pass_at_k": 0.6667,
+      "pass_power_k_proxy": 0.6667,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 404.0,
+      "trials": 3
     },
     "finetuned": {
-      "tool_selection_accuracy": 0.8333,
-      "parameter_correctness": 0.75,
-      "repl_code_validity": 1.0,
-      "end_to_end_accuracy": 0.75,
-      "avg_turns": 4.83,
-      "failure_rate": 0.0833,
+      "tool_selection_accuracy": 0.6667,
+      "parameter_correctness": 0.6667,
+      "repl_code_validity": 0.9048,
+      "end_to_end_accuracy": 0.6667,
+      "avg_turns": 7.0,
+      "failure_rate": 0.3333,
       "context_savings_pct": 1.0,
-      "total_queries": 12,
-      "elapsed_seconds": 223.3
+      "total_queries": 3,
+      "pass_at_1": 0.6667,
+      "pass_at_k": 0.6667,
+      "pass_power_k_proxy": 0.6667,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 224.0,
+      "trials": 3
     },
-    "delta_tsa": 0.0833,
+    "delta_tsa": 0.0,
     "delta_pc": 0.0,
-    "delta_rcv": 0.1125,
+    "delta_rcv": 0.2992,
     "delta_e2e": 0.0,
-    "delta_fail": 0.0
+    "delta_fail": 0.3333,
+    "delta_pass_at_1": 0.0,
+    "delta_pass_at_k": 0.0,
+    "delta_pass_power_k_proxy": 0.0,
+    "significance": {
+      "delta_tsa": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 1.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 1.0
+        },
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 1.0
+        },
+        "excludes_zero": false
+      },
+      "delta_fail": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_1": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 1.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_k": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 1.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_power_k_proxy": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 1.0
+        },
+        "excludes_zero": false
+      }
+    },
+    "paired_significance": {
+      "delta_tsa": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "paired_bootstrap_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      }
+    }
   },
   "level2_small_10": {
     "base": {
       "tool_selection_accuracy": 1.0,
       "parameter_correctness": 1.0,
-      "repl_code_validity": 0.9643,
+      "repl_code_validity": 0.6667,
       "end_to_end_accuracy": 1.0,
-      "avg_turns": 3.57,
+      "avg_turns": 4.0,
       "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 7,
-      "elapsed_seconds": 229.0
+      "total_queries": 1,
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_power_k_proxy": 1.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 47.7,
+      "trials": 3
     },
     "finetuned": {
-      "tool_selection_accuracy": 0.8571,
-      "parameter_correctness": 0.8571,
-      "repl_code_validity": 0.9857,
-      "end_to_end_accuracy": 0.8571,
-      "avg_turns": 4.57,
-      "failure_rate": 0.1429,
+      "tool_selection_accuracy": 0.0,
+      "parameter_correctness": 0.0,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.0,
+      "avg_turns": 4.0,
+      "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 7,
-      "elapsed_seconds": 128.9
+      "total_queries": 1,
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "pass_power_k_proxy": 0.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "pass_at_k": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "pass_power_k_proxy": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_pc_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ]
+      },
+      "elapsed_seconds": 36.6,
+      "trials": 3
     },
-    "delta_tsa": -0.1429,
-    "delta_pc": -0.1429,
-    "delta_rcv": 0.0214,
-    "delta_e2e": -0.1429,
-    "delta_fail": 0.1429
+    "delta_tsa": -1.0,
+    "delta_pc": -1.0,
+    "delta_rcv": 0.3333,
+    "delta_e2e": -1.0,
+    "delta_fail": 0.0,
+    "delta_pass_at_1": -1.0,
+    "delta_pass_at_k": -1.0,
+    "delta_pass_power_k_proxy": -1.0,
+    "significance": {
+      "delta_tsa": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_pc": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_e2e": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_fail": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_1": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_pass_at_k": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      },
+      "delta_pass_power_k_proxy": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "excludes_zero": true
+      }
+    },
+    "paired_significance": {
+      "delta_tsa": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": true
+      },
+      "delta_pc": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": true
+      },
+      "delta_e2e": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": -1.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": true
+      }
+    }
   },
   "level2_medium_25": {
     "base": {
       "tool_selection_accuracy": 1.0,
       "parameter_correctness": 1.0,
-      "repl_code_validity": 0.9514,
+      "repl_code_validity": 0.9167,
       "end_to_end_accuracy": 1.0,
-      "avg_turns": 3.25,
+      "avg_turns": 3.67,
       "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 12,
-      "elapsed_seconds": 356.4
+      "total_queries": 3,
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_power_k_proxy": 1.0,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 1.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 1.0
+          }
+        ]
+      },
+      "elapsed_seconds": 178.0,
+      "trials": 3
     },
     "finetuned": {
-      "tool_selection_accuracy": 0.9167,
-      "parameter_correctness": 0.9167,
-      "repl_code_validity": 0.9708,
-      "end_to_end_accuracy": 0.9167,
-      "avg_turns": 4.08,
-      "failure_rate": 0.0833,
+      "tool_selection_accuracy": 0.6667,
+      "parameter_correctness": 0.3333,
+      "repl_code_validity": 1.0,
+      "end_to_end_accuracy": 0.3333,
+      "avg_turns": 3.33,
+      "failure_rate": 0.0,
       "context_savings_pct": 1.0,
-      "total_queries": 12,
-      "elapsed_seconds": 196.3
+      "total_queries": 3,
+      "pass_at_1": 0.3333,
+      "pass_at_k": 0.3333,
+      "pass_power_k_proxy": 0.3333,
+      "confidence_intervals": {
+        "pass_at_1": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_at_k": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "pass_power_k_proxy": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_tsa_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_pc_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        },
+        "mean_failure_over_trials": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "mean_e2e_over_trials": {
+          "low": 0.0,
+          "high": 1.0
+        }
+      },
+      "per_query_rates": {
+        "tsa": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 1.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ],
+        "pc": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ],
+        "e2e": [
+          {
+            "query": "Translate 'Hello world' to French",
+            "rate": 0.0
+          },
+          {
+            "query": "Search the web for 'best python frameworks 2025'",
+            "rate": 1.0
+          },
+          {
+            "query": "List all files in the /var/log directory",
+            "rate": 0.0
+          }
+        ]
+      },
+      "elapsed_seconds": 94.7,
+      "trials": 3
     },
-    "delta_tsa": -0.0833,
-    "delta_pc": -0.0833,
-    "delta_rcv": 0.0194,
-    "delta_e2e": -0.0833,
-    "delta_fail": 0.0833
+    "delta_tsa": -0.3333,
+    "delta_pc": -0.6667,
+    "delta_rcv": 0.0833,
+    "delta_e2e": -0.6667,
+    "delta_fail": 0.0,
+    "delta_pass_at_1": -0.6667,
+    "delta_pass_at_k": -0.6667,
+    "delta_pass_power_k_proxy": -0.6667,
+    "significance": {
+      "delta_tsa": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_fail": {
+        "approx_ci": {
+          "low": 0.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_1": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_at_k": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      },
+      "delta_pass_power_k_proxy": {
+        "approx_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "excludes_zero": false
+      }
+    },
+    "paired_significance": {
+      "delta_tsa": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 1.0,
+        "excludes_zero": false
+      },
+      "delta_pc": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 0.5,
+        "excludes_zero": false
+      },
+      "delta_e2e": {
+        "paired_bootstrap_ci": {
+          "low": -1.0,
+          "high": 0.0
+        },
+        "paired_sign_test_pvalue": 0.5,
+        "excludes_zero": false
+      }
+    }
   }
 }

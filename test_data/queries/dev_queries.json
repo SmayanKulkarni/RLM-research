@@ -1,0 +1,22 @@
+[
+  {
+    "query": "Translate 'Hello world' to French",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Search the web for 'best python frameworks 2025'",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "List all files in the /var/log directory",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "Find all Python files in /src that contain the word 'TODO'",
+    "category": "simple",
+    "difficulty": "hard"
+  }
+]

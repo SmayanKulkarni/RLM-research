@@ -8,6 +8,7 @@ Design Reference: implementation_poa.md § Q1 (Test Data)
 """
 
 import json
+import random
 from pathlib import Path
 
 
@@ -758,6 +759,45 @@ def generate_test_data(output_dir: str = "."):
         json.dump(queries_out, f, indent=2)
     print(f"  Created all_queries.json ({len(queries_out)} queries)")
 
+    # Deterministic train/dev/test split manifests for leakage-safe experiments
+    rng = random.Random(42)
+    indices = list(range(len(TEST_QUERIES)))
+
+    # Keep category mix stable (simple vs discovery)
+    simple_idx = [i for i in indices if TEST_QUERIES[i]["category"] == "simple"]
+    discovery_idx = [i for i in indices if TEST_QUERIES[i]["category"] == "discovery"]
+    rng.shuffle(simple_idx)
+    rng.shuffle(discovery_idx)
+
+    # 70/15/15 on simple queries + deterministic split for discovery (2/0/1)
+    n_simple = len(simple_idx)
+    n_train_simple = int(round(n_simple * 0.70))
+    n_dev_simple = int(round(n_simple * 0.15))
+    n_test_simple = n_simple - n_train_simple - n_dev_simple
+
+    train_idx = simple_idx[:n_train_simple] + discovery_idx[:2]
+    dev_idx = simple_idx[n_train_simple:n_train_simple + n_dev_simple]
+    test_idx = simple_idx[n_train_simple + n_dev_simple:n_train_simple + n_dev_simple + n_test_simple] + discovery_idx[2:]
+
+    split_map = {
+        "train": sorted(train_idx),
+        "dev": sorted(dev_idx),
+        "test": sorted(test_idx),
+    }
+
+    for split_name, split_indices in split_map.items():
+        split_queries = [
+            {
+                "query": TEST_QUERIES[i]["query"],
+                "category": TEST_QUERIES[i]["category"],
+                "difficulty": TEST_QUERIES[i]["difficulty"],
+            }
+            for i in split_indices
+        ]
+        with open(queries_dir / f"{split_name}_queries.json", "w") as f:
+            json.dump(split_queries, f, indent=2)
+        print(f"  Created {split_name}_queries.json ({len(split_queries)} queries)")
+
     # ── Ground Truth ──
     gt_dir = base / "test_data" / "ground_truth"
     gt_dir.mkdir(parents=True, exist_ok=True)
@@ -769,6 +809,19 @@ def generate_test_data(output_dir: str = "."):
     with open(gt_dir / "expected_selections.json", "w") as f:
         json.dump(gt_out, f, indent=2)
     print(f"  Created expected_selections.json ({len(gt_out)} entries)")
+
+    for split_name, split_indices in split_map.items():
+        split_gt = [
+            {
+                "query": TEST_QUERIES[i]["query"],
+                "expected_tool": TEST_QUERIES[i]["expected_tool"],
+                "expected_params": TEST_QUERIES[i]["expected_params"],
+            }
+            for i in split_indices
+        ]
+        with open(gt_dir / f"{split_name}_expected_selections.json", "w") as f:
+            json.dump(split_gt, f, indent=2)
+        print(f"  Created {split_name}_expected_selections.json ({len(split_gt)} entries)")
 
     print(f"\n✅ Test data generation complete! ({len(ALL_TOOLS)} tools, {len(TEST_QUERIES)} queries)")
 

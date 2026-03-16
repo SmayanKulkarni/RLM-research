@@ -1,0 +1,22 @@
+[
+  {
+    "query": "What's the weather like in London right now?",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "What's Apple's current stock price?",
+    "category": "simple",
+    "difficulty": "easy"
+  },
+  {
+    "query": "I want to save some data as a zip file for backup",
+    "category": "simple",
+    "difficulty": "hard"
+  },
+  {
+    "query": "What machine learning capabilities are available?",
+    "category": "discovery",
+    "difficulty": "medium"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Translate 'Hello world' to French",
+    "expected_tool": "translate_text",
+    "expected_params": {
+      "text": "Hello world",
+      "target_language": "fr"
+    }
+  },
+  {
+    "query": "Search the web for 'best python frameworks 2025'",
+    "expected_tool": "search_web",
+    "expected_params": {
+      "query": "best python frameworks 2025"
+    }
+  },
+  {
+    "query": "List all files in the /var/log directory",
+    "expected_tool": "list_directory",
+    "expected_params": {
+      "path": "/var/log"
+    }
+  },
+  {
+    "query": "Find all Python files in /src that contain the word 'TODO'",
+    "expected_tool": "search_code",
+    "expected_params": {
+      "pattern": "TODO",
+      "file_type": ".py"
+    }
+  }
+]

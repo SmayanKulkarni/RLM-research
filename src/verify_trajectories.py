@@ -166,7 +166,39 @@ def stage2_execution(traj: dict) -> tuple[bool, str, list[dict]]:
     return True, "ok", new_messages
 
 
-def stage3_semantic(traj: dict, updated_messages: list[dict]) -> tuple[bool, str]:
+def load_expected_params_lookup() -> dict[str, dict]:
+    """Load query -> expected_params from known evaluation manifests."""
+    lookup: dict[str, dict] = {}
+    candidates = [
+        PROJECT_ROOT / "test_data" / "ground_truth" / "expected_selections.json",
+        PROJECT_ROOT / "test_data" / "ground_truth" / "train_expected_selections.json",
+        PROJECT_ROOT / "test_data" / "ground_truth" / "dev_expected_selections.json",
+        PROJECT_ROOT / "test_data" / "ground_truth" / "test_expected_selections.json",
+    ]
+    for path in candidates:
+        if not path.exists():
+            continue
+        with open(path) as file_handle:
+            data = json.load(file_handle)
+        for row in data:
+            query = row.get("query")
+            expected_params = row.get("expected_params", {})
+            if query:
+                lookup[query] = expected_params if isinstance(expected_params, dict) else {}
+    return lookup
+
+
+def _param_values_match(predicted: Any, expected: Any) -> bool:
+    if isinstance(predicted, (int, float, bool)) or isinstance(expected, (int, float, bool)):
+        return str(predicted).strip().lower() == str(expected).strip().lower()
+    return str(predicted).strip().lower() == str(expected).strip().lower()
+
+
+def stage3_semantic(
+    traj: dict,
+    updated_messages: list[dict],
+    expected_params_lookup: dict[str, dict],
+) -> tuple[bool, str]:
     """
     Stage 3: Check that the predicted tool matches the correct tool.
 
@@ -195,18 +227,39 @@ def stage3_semantic(traj: dict, updated_messages: list[dict]) -> tuple[bool, str
     if predicted_tool != correct_tool:
         return False, f"Tool mismatch: predicted={predicted_tool}, correct={correct_tool}"
 
-    # FINAL params should be non-empty
+    # FINAL params should be a dict
     params = final_obj.get("params", {})
     if not isinstance(params, dict):
         return False, "FINAL params is not a dict"
 
-    # Verify the tool exists in the registry
+    # Verify tool exists + required params from schema are present
     reg_name = traj.get("registry", "small_10")
     reg_path = PROJECT_ROOT / "test_data" / "tool_registries" / f"{reg_name}.json"
     if reg_path.exists():
         registry = MCPToolRegistry.from_json_file(reg_path)
         if correct_tool not in registry.list_names():
             return False, f"Tool '{correct_tool}' not in registry '{reg_name}'"
+
+        schema = registry.get_schema(correct_tool)
+        required = schema.get("inputSchema", {}).get("required", []) if schema else []
+        for required_param in required:
+            if required_param not in params:
+                return False, f"Missing required param '{required_param}'"
+            value = params.get(required_param)
+            if value is None:
+                return False, f"Required param '{required_param}' is null"
+            if isinstance(value, str) and not value.strip():
+                return False, f"Required param '{required_param}' is empty"
+
+    # If query appears in known eval manifests, enforce expected-param value match
+    query_text = traj.get("query", "")
+    expected_params = expected_params_lookup.get(query_text, {})
+    if expected_params:
+        for key, value in expected_params.items():
+            if key not in params:
+                return False, f"Expected param '{key}' missing"
+            if not _param_values_match(params.get(key), value):
+                return False, f"Expected param mismatch for '{key}'"
 
     return True, "ok"
 
@@ -239,6 +292,7 @@ def run(args):
     rejected = []
 
     stage_counts = {"stage1": 0, "stage2": 0, "stage3": 0}
+    expected_params_lookup = load_expected_params_lookup()
 
     for i, traj in enumerate(trajectories):
         q_short = traj.get("query", "?")[:55]
@@ -263,7 +317,7 @@ def run(args):
         print(f"  ✓ Stage 2 (execution)")
 
         # Stage 3: Semantic
-        ok, reason = stage3_semantic(traj, updated_messages)
+        ok, reason = stage3_semantic(traj, updated_messages, expected_params_lookup)
         if not ok:
             stage_counts["stage3"] += 1
             print(f"  ✗ Stage 3 FAIL: {reason}")
@@ -271,14 +325,8 @@ def run(args):
             continue
         print(f"  ✓ Stage 3 (semantic)")
 
-        # PASSED all stages — use real-output-updated messages
-        clean_traj = {
-            "registry": traj.get("registry"),
-            "query": traj.get("query"),
-            "correct_tool": traj.get("correct_tool"),
-            "turns": traj.get("turns"),
-            "messages": updated_messages,
-        }
+        # PASSED all stages — preserve metadata/provenance while swapping in grounded outputs
+        clean_traj = {**traj, "messages": updated_messages}
         verified.append(clean_traj)
 
     # Write outputs

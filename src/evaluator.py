@@ -16,6 +16,7 @@ Design Reference: implementation_poa.md § Q4 (Evaluation)
 from __future__ import annotations
 
 import json
+import random
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -211,6 +212,16 @@ class MCPToolEvaluator:
 
         return None, None
 
+    @staticmethod
+    def parse_discovery_answer(answer: str | None) -> str | None:
+        """Extract free-text discovery answer from FINAL(...) output."""
+        if answer is None:
+            return None
+        clean = str(answer).strip()
+        if not clean:
+            return None
+        return clean
+
     # ── Evaluation ───────────────────────────────────────────────────
 
     def evaluate_single(
@@ -232,22 +243,34 @@ class MCPToolEvaluator:
         # Parse the answer
         predicted_tool, predicted_params = self.parse_tool_from_answer(result.answer)
 
-        # Check tool correctness
-        tool_correct = (
-            predicted_tool is not None
-            and predicted_tool.lower() == test_case.expected_tool.lower()
+        is_discovery = (
+            test_case.expected_tool == "DISCOVERY"
+            or test_case.category.lower() == "discovery"
         )
 
-        # Check params correctness
-        params_correct = False
-        if tool_correct and test_case.expected_params and predicted_params:
-            # Check required params are present and match
-            params_correct = all(
-                k in predicted_params and str(predicted_params[k]).lower() == str(v).lower()
-                for k, v in test_case.expected_params.items()
+        if is_discovery:
+            discovery_answer = self.parse_discovery_answer(result.answer)
+            tool_correct = bool(result.success and discovery_answer)
+            params_correct = tool_correct
+            predicted_tool = "DISCOVERY" if tool_correct else predicted_tool
+            predicted_params = None
+        else:
+            # Check tool correctness
+            tool_correct = (
+                predicted_tool is not None
+                and predicted_tool.lower() == test_case.expected_tool.lower()
             )
-        elif tool_correct and not test_case.expected_params:
-            params_correct = True  # No params expected
+
+            # Check params correctness
+            params_correct = False
+            if tool_correct and test_case.expected_params and predicted_params:
+                # Check required params are present and match
+                params_correct = all(
+                    k in predicted_params and str(predicted_params[k]).lower() == str(v).lower()
+                    for k, v in test_case.expected_params.items()
+                )
+            elif tool_correct and not test_case.expected_params:
+                params_correct = True  # No params expected
 
         # Code validity
         code_validity = 0.0
@@ -309,9 +332,96 @@ class MCPToolEvaluator:
             result = self.evaluate_single(tc, level=level, verbose=verbose)
             results.append(result)
 
-        # Aggregate metrics
+        metrics = self._aggregate_metrics(results)
+
+        if verbose:
+            print(metrics.summary())
+
+        return metrics, results
+
+    def evaluate_repeated(
+        self,
+        test_cases: list[QueryTestCase],
+        level: int = 1,
+        trials: int = 5,
+        verbose: bool = True,
+        bootstrap_samples: int = 1000,
+        bootstrap_confidence: float = 0.95,
+    ) -> tuple[dict, list[list[EvalResult]]]:
+        """Run repeated-trial evaluation for pass-style reliability metrics."""
+        if trials < 1:
+            raise ValueError("trials must be >= 1")
+
+        trial_results: list[list[EvalResult]] = []
+        per_trial_metrics: list[dict] = []
+
+        for trial in range(trials):
+            if verbose:
+                print(f"\n--- Trial {trial + 1}/{trials} ---")
+            metrics, results = self.evaluate_all(test_cases, level=level, verbose=verbose)
+            trial_results.append(results)
+            per_trial_metrics.append(metrics.to_dict())
+
+        n = len(test_cases)
+        if n == 0:
+            raise ValueError("No test cases provided")
+
+        # Query-level pass-style stats over repeated trials
+        e2e_success_matrix = [
+            [bool(trial_results[t][i].tool_correct and trial_results[t][i].params_correct) for t in range(trials)]
+            for i in range(n)
+        ]
+        tsa_matrix = [
+            [bool(trial_results[t][i].tool_correct) for t in range(trials)]
+            for i in range(n)
+        ]
+        pc_matrix = [
+            [bool(trial_results[t][i].params_correct) for t in range(trials)]
+            for i in range(n)
+        ]
+        failure_matrix = [
+            [not bool(trial_results[t][i].success) for t in range(trials)]
+            for i in range(n)
+        ]
+
+        pass_at_1_values = [float(row[0]) for row in e2e_success_matrix]
+        pass_at_k_values = [float(any(row)) for row in e2e_success_matrix]
+        pass_power_k_values = [float(all(row)) for row in e2e_success_matrix]
+
+        # Mean per-query rates across trials (stability signal)
+        tsa_mean_query = [sum(row) / trials for row in tsa_matrix]
+        pc_mean_query = [sum(row) / trials for row in pc_matrix]
+        fail_mean_query = [sum(row) / trials for row in failure_matrix]
+        e2e_mean_query = [sum(row) / trials for row in e2e_success_matrix]
+
+        summary = {
+            "trials": trials,
+            "aggregated": per_trial_metrics[0],
+            "pass_at_1": round(sum(pass_at_1_values) / n, 4),
+            "pass_at_k": round(sum(pass_at_k_values) / n, 4),
+            "pass_power_k_proxy": round(sum(pass_power_k_values) / n, 4),
+            "mean_tsa_over_trials": round(sum(tsa_mean_query) / n, 4),
+            "mean_pc_over_trials": round(sum(pc_mean_query) / n, 4),
+            "mean_failure_over_trials": round(sum(fail_mean_query) / n, 4),
+            "mean_e2e_over_trials": round(sum(e2e_mean_query) / n, 4),
+            "confidence_intervals": {
+                "pass_at_1": self._bootstrap_ci(pass_at_1_values, bootstrap_samples, bootstrap_confidence),
+                "pass_at_k": self._bootstrap_ci(pass_at_k_values, bootstrap_samples, bootstrap_confidence),
+                "pass_power_k_proxy": self._bootstrap_ci(pass_power_k_values, bootstrap_samples, bootstrap_confidence),
+                "mean_tsa_over_trials": self._bootstrap_ci(tsa_mean_query, bootstrap_samples, bootstrap_confidence),
+                "mean_pc_over_trials": self._bootstrap_ci(pc_mean_query, bootstrap_samples, bootstrap_confidence),
+                "mean_failure_over_trials": self._bootstrap_ci(fail_mean_query, bootstrap_samples, bootstrap_confidence),
+                "mean_e2e_over_trials": self._bootstrap_ci(e2e_mean_query, bootstrap_samples, bootstrap_confidence),
+            },
+            "per_trial_metrics": per_trial_metrics,
+        }
+
+        return summary, trial_results
+
+    def _aggregate_metrics(self, results: list[EvalResult]) -> EvalMetrics:
+        """Aggregate per-query results into EvalMetrics."""
         n = len(results)
-        metrics = EvalMetrics(
+        return EvalMetrics(
             tool_selection_accuracy=sum(r.tool_correct for r in results) / n,
             parameter_correctness=sum(r.params_correct for r in results) / n,
             repl_code_validity=sum(r.code_validity for r in results) / n if any(r.code_validity > 0 for r in results) else 0.0,
@@ -322,23 +432,50 @@ class MCPToolEvaluator:
             context_tokens_without_repl=self.tools_registry.get_total_tokens_estimate(),
         )
 
-        if verbose:
-            print(metrics.summary())
+    @staticmethod
+    def _bootstrap_ci(values: list[float], samples: int = 1000, confidence: float = 0.95) -> dict:
+        """Bootstrap confidence interval for mean(values)."""
+        if not values:
+            return {"low": 0.0, "high": 0.0}
 
-        return metrics, results
+        rng = random.Random(42)
+        n = len(values)
+        means = []
+        for _ in range(samples):
+            sample = [values[rng.randrange(n)] for _ in range(n)]
+            means.append(sum(sample) / n)
+
+        means.sort()
+        lower_idx = int(((1 - confidence) / 2) * (samples - 1))
+        upper_idx = int((1 - (1 - confidence) / 2) * (samples - 1))
+
+        return {
+            "low": round(means[lower_idx], 4),
+            "high": round(means[upper_idx], 4),
+        }
 
     # ── Results I/O ──────────────────────────────────────────────────
 
     @staticmethod
     def save_results(
-        metrics: EvalMetrics,
-        results: list[EvalResult],
+        metrics: EvalMetrics | dict,
+        results: list[EvalResult] | list[list[EvalResult]],
         output_path: str | Path,
     ):
         """Save evaluation results to a JSON file."""
+        if isinstance(metrics, EvalMetrics):
+            metrics_payload = metrics.to_dict()
+        else:
+            metrics_payload = metrics
+
+        if results and isinstance(results[0], list):
+            results_payload = [[r.to_dict() for r in trial] for trial in results]
+        else:
+            results_payload = [r.to_dict() for r in results]
+
         output = {
-            "metrics": metrics.to_dict(),
-            "results": [r.to_dict() for r in results],
+            "metrics": metrics_payload,
+            "results": results_payload,
         }
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w") as f:

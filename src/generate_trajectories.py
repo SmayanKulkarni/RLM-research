@@ -301,13 +301,20 @@ def load_ground_truth() -> dict[str, str]:
     return {}
 
 
-def load_existing_queries() -> list[dict]:
-    """Load existing test queries."""
-    q_path = PROJECT_ROOT / "test_data" / "queries" / "all_queries.json"
+def load_existing_queries(split: str = "all") -> list[dict]:
+    """Load existing queries for a specific split."""
+    if split == "all":
+        q_path = PROJECT_ROOT / "test_data" / "queries" / "all_queries.json"
+    else:
+        q_path = PROJECT_ROOT / "test_data" / "queries" / f"{split}_queries.json"
+
     if q_path.exists():
         with open(q_path) as f:
             data = json.load(f)
         return data if isinstance(data, list) else data.get("queries", [])
+
+    if split != "all":
+        print(f"[WARN] Query split file not found: {q_path}")
     return []
 
 
@@ -325,7 +332,12 @@ def run(args):
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     ground_truth = load_ground_truth()
-    existing_queries = load_existing_queries()
+    existing_queries = []
+    if args.seed_query_split != "none":
+        existing_queries = load_existing_queries(args.seed_query_split)
+        print(
+            f"Loaded {len(existing_queries)} seed queries from split='{args.seed_query_split}'."
+        )
 
     # Build query→tool mapping from existing test data
     existing_qt = {}
@@ -364,7 +376,7 @@ def run(args):
 
         qt_pairs: list[tuple[str, str]] = []
 
-        # 1. Existing test queries that belong to this registry
+        # 1. Optional seed queries that belong to this registry
         all_tool_names = set(registry.list_names())
         for q, t in existing_qt.items():
             if t in all_tool_names:
@@ -484,7 +496,22 @@ def main():
         "--seed", type=int, default=42,
         help="Random seed for reproducibility",
     )
+    parser.add_argument(
+        "--seed-query-split", type=str, default="none",
+        choices=["none", "train", "dev", "test", "all"],
+        help=(
+            "Optional query split used to seed generation with existing queries. "
+            "Default is 'none' to avoid train/eval leakage."
+        ),
+    )
     args = parser.parse_args()
+
+    if args.seed_query_split in {"test", "all"}:
+        print(
+            f"[WARN] seed_query_split={args.seed_query_split} can cause train/eval leakage. "
+            "Prefer --seed-query-split train for controlled experiments."
+        )
+
     random.seed(args.seed)
     run(args)
 

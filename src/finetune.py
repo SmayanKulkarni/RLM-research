@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -71,6 +72,54 @@ def load_verified_trajectories(path: Path) -> list[dict]:
 
     print(f"Loaded {len(trajectories)} verified trajectories from {path}")
     return trajectories
+
+
+def load_query_split_lookup() -> dict[str, dict]:
+    """Load query split/category metadata from the leakage-safe manifests."""
+    query_dir = PROJECT_ROOT / "test_data" / "queries"
+    lookup: dict[str, dict] = {}
+
+    all_path = query_dir / "all_queries.json"
+    if all_path.exists():
+        with open(all_path) as file_handle:
+            for row in json.load(file_handle):
+                query = row.get("query")
+                if query:
+                    lookup[query] = {
+                        "query_category": row.get("category", "unknown"),
+                        "difficulty": row.get("difficulty", "unknown"),
+                    }
+
+    for split_name in ("train", "dev", "test"):
+        split_path = query_dir / f"{split_name}_queries.json"
+        if not split_path.exists():
+            continue
+        with open(split_path) as file_handle:
+            for row in json.load(file_handle):
+                query = row.get("query")
+                if not query:
+                    continue
+                base = lookup.setdefault(query, {})
+                base["split"] = split_name
+                base.setdefault("query_category", row.get("category", "unknown"))
+                base.setdefault("difficulty", row.get("difficulty", "unknown"))
+
+    return lookup
+
+
+def enrich_trajectory_metadata(trajectory: dict, query_split_lookup: dict[str, dict]) -> dict:
+    """Ensure every trajectory carries split/category metadata for partitioning."""
+    row = dict(trajectory)
+    metadata = dict(row.get("metadata", {}))
+    query_meta = query_split_lookup.get(row.get("query", ""), {})
+
+    metadata["split"] = metadata.get("split") or query_meta.get("split") or "train"
+    metadata["query_category"] = (
+        metadata.get("query_category") or query_meta.get("query_category") or "synthetic_selection"
+    )
+    metadata["difficulty"] = metadata.get("difficulty") or query_meta.get("difficulty") or "synthetic"
+    row["metadata"] = metadata
+    return row
 
 
 def format_for_training(trajectory: dict, tokenizer) -> dict | None:
@@ -144,6 +193,52 @@ def build_hf_dataset(trajectories: list[dict], tokenizer, max_length: int):
         print(f"  Skipped {skipped} trajectories exceeding max_length={max_length}")
 
     return Dataset.from_list(formatted)
+
+
+def partition_trajectories(
+    trajectories: list[dict],
+    train_split: str,
+    eval_split: str | None,
+    allow_random_split_fallback: bool,
+) -> tuple[list[dict], list[dict]]:
+    """Partition trajectories using explicit split metadata when available."""
+    train_rows: list[dict] = []
+    eval_rows: list[dict] = []
+
+    for row in trajectories:
+        split = row.get("metadata", {}).get("split", "train")
+        if split == train_split:
+            train_rows.append(row)
+        elif eval_split and split == eval_split:
+            eval_rows.append(row)
+
+    if train_rows and eval_rows:
+        return train_rows, eval_rows
+
+    if not allow_random_split_fallback:
+        missing = []
+        if not train_rows:
+            missing.append(f"train split '{train_split}'")
+        if eval_split and not eval_rows:
+            missing.append(f"eval split '{eval_split}'")
+        print(
+            "ERROR: Could not build explicit split-aware datasets for "
+            + ", ".join(missing)
+            + ". Use a corpus that includes split metadata or pass --allow-random-split-fallback."
+        )
+        sys.exit(1)
+
+    print("⚠ Falling back to random 90/10 split because explicit split metadata is incomplete")
+    shuffled = list(trajectories)
+    if len(shuffled) < 2:
+        return shuffled, []
+
+    from random import Random
+    rng = Random(42)
+    rng.shuffle(shuffled)
+    cut = max(1, int(round(len(shuffled) * 0.9)))
+    cut = min(cut, len(shuffled) - 1)
+    return shuffled[:cut], shuffled[cut:]
 
 
 # ── Model Loading ─────────────────────────────────────────────────────────────
@@ -220,12 +315,58 @@ def apply_lora(model, tokenizer):
     return model
 
 
+def apply_assistant_only_loss_mask(trainer, args):
+    """Apply assistant-only masking using Unsloth response-only utility."""
+    try:
+        from unsloth.chat_templates import train_on_responses_only
+        trainer = train_on_responses_only(
+            trainer,
+            instruction_part=args.user_marker,
+            response_part=args.assistant_marker,
+        )
+        print("✓ Assistant-only loss masking enabled")
+        return trainer
+    except Exception as e:
+        if args.allow_unmasked_fallback:
+            print(f"⚠ Could not enable assistant-only masking: {type(e).__name__}: {e}")
+            print("  Continuing without masking due to --allow-unmasked-fallback")
+            return trainer
+        raise RuntimeError(
+            "Assistant-only masking failed. Use --allow-unmasked-fallback to continue without masking. "
+            f"Root cause: {type(e).__name__}: {e}"
+        )
+
+
+def print_label_mask_stats(trainer, max_batches: int = 1):
+    """Print ratio of non-masked labels to verify assistant-only masking."""
+    try:
+        dataloader = trainer.get_train_dataloader()
+        inspected = 0
+        total = 0
+        active = 0
+        for batch in dataloader:
+            labels = batch.get("labels")
+            if labels is None:
+                break
+            total += labels.numel()
+            active += int((labels != -100).sum().item())
+            inspected += 1
+            if inspected >= max_batches:
+                break
+        if total > 0:
+            ratio = active / total
+            print(f"  Label mask check: active={active} / total={total} ({ratio:.2%})")
+    except Exception as e:
+        print(f"  Label mask check skipped: {type(e).__name__}: {e}")
+
+
 # ── Training ──────────────────────────────────────────────────────────────────
 
 def train(
     model,
     tokenizer,
-    dataset,
+    train_dataset,
+    eval_dataset,
     output_dir: Path,
     args,
 ):
@@ -234,14 +375,19 @@ def train(
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Split into train/eval (90/10)
-    split = dataset.train_test_split(test_size=0.1, seed=42)
-    train_ds = split["train"]
-    eval_ds = split["test"]
+    train_ds = train_dataset
+    eval_ds = eval_dataset
 
     print(f"\nDataset split:")
     print(f"  Train : {len(train_ds)}")
     print(f"  Eval  : {len(eval_ds)}")
+
+    if len(train_ds) == 0:
+        print("ERROR: Empty train dataset after split partitioning")
+        sys.exit(1)
+    if len(eval_ds) == 0:
+        print("ERROR: Empty eval dataset after split partitioning")
+        sys.exit(1)
 
     # Compute steps
     effective_batch = args.per_device_batch_size * args.grad_accumulation
@@ -297,6 +443,10 @@ def train(
         eval_dataset=eval_ds,
         args=training_args,
     )
+
+    if not args.no_assistant_only_loss:
+        trainer = apply_assistant_only_loss_mask(trainer, args)
+        print_label_mask_stats(trainer, max_batches=1)
 
     # Resume from checkpoint if specified
     resume_from = args.resume_from if hasattr(args, "resume_from") and args.resume_from else None
@@ -427,10 +577,55 @@ Examples:
         "--resume-from", type=str, default=None,
         help="Resume training from a checkpoint directory",
     )
+    parser.add_argument(
+        "--no-assistant-only-loss", action="store_true",
+        help="Disable assistant-only loss masking (not recommended).",
+    )
+    parser.add_argument(
+        "--assistant-marker", type=str, default="<|im_start|>assistant\n",
+        help="Assistant marker used for response-only masking.",
+    )
+    parser.add_argument(
+        "--user-marker", type=str, default="<|im_start|>user\n",
+        help="User marker used for response-only masking.",
+    )
+    parser.add_argument(
+        "--allow-unmasked-fallback", action="store_true",
+        help="Continue training if assistant-only masking cannot be applied.",
+    )
+    parser.add_argument(
+        "--train-split", type=str, default="train",
+        choices=["train", "dev", "test"],
+        help="Split label used for the training partition.",
+    )
+    parser.add_argument(
+        "--eval-split", type=str, default="dev",
+        choices=["train", "dev", "test"],
+        help="Split label used for the evaluation partition.",
+    )
+    parser.add_argument(
+        "--allow-random-split-fallback", action="store_true",
+        help="Fall back to a random 90/10 split if the dataset lacks explicit split metadata.",
+    )
+    parser.add_argument(
+        "--no-clean-output-first", action="store_true",
+        help="Do not delete existing output model directories before training.",
+    )
     args = parser.parse_args()
 
     data_path = PROJECT_ROOT / args.data
     output_dir = PROJECT_ROOT / args.output
+
+    if not args.no_clean_output_first:
+        cleanup_targets = [
+            output_dir,
+            output_dir.parent / (output_dir.name + "-merged"),
+            output_dir.parent / (output_dir.name + "-gguf"),
+        ]
+        for target in cleanup_targets:
+            if target.exists():
+                print(f"Cleaning existing model artifact: {target}")
+                shutil.rmtree(target, ignore_errors=True)
 
     print(f"\n{'='*60}")
     print(f"RLM-MCP QLoRA Fine-Tuning")
@@ -455,14 +650,34 @@ Examples:
     # 3. Load + format dataset
     print("\nPreparing dataset...")
     trajectories = load_verified_trajectories(data_path)
-    dataset = build_hf_dataset(trajectories, tokenizer, max_length=args.max_seq_length)
+    query_split_lookup = load_query_split_lookup()
+    trajectories = [enrich_trajectory_metadata(traj, query_split_lookup) for traj in trajectories]
 
-    if len(dataset) < 10:
-        print(f"ERROR: Only {len(dataset)} training examples — too few to train. Generate more trajectories.")
+    split_counts: dict[str, int] = {}
+    for traj in trajectories:
+        split = traj.get("metadata", {}).get("split", "train")
+        split_counts[split] = split_counts.get(split, 0) + 1
+    print(f"  Split composition: {split_counts}")
+
+    train_rows, eval_rows = partition_trajectories(
+        trajectories,
+        train_split=args.train_split,
+        eval_split=args.eval_split,
+        allow_random_split_fallback=args.allow_random_split_fallback,
+    )
+
+    train_dataset = build_hf_dataset(train_rows, tokenizer, max_length=args.max_seq_length)
+    eval_dataset = build_hf_dataset(eval_rows, tokenizer, max_length=args.max_seq_length)
+
+    if len(train_dataset) < 10:
+        print(f"ERROR: Only {len(train_dataset)} training examples — too few to train. Generate more trajectories.")
+        sys.exit(1)
+    if len(eval_dataset) == 0:
+        print("ERROR: No evaluation examples available after formatting.")
         sys.exit(1)
 
     # 4. Train
-    trainer = train(model, tokenizer, dataset, output_dir, args)
+    trainer = train(model, tokenizer, train_dataset, eval_dataset, output_dir, args)
 
     # 5. Save
     save_model(model, tokenizer, output_dir, merge=args.merge_and_export)

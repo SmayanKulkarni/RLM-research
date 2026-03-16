@@ -300,4 +300,249 @@
 - [Barres et al., 2025] "τ²-bench GitHub" — https://github.com/sierra-research/tau2-bench
 - [Yao et al., 2025] "τ-bench (ICLR 2025)" — https://openreview.net/forum?id=roNSXZpUDN
 
+---
+
+## 2026-03-16 — Repo Update Log (Qwen3.5-Only + Comparison Pipeline Stabilization)
+
+**Session goal:** Record all completed implementation updates before next experimentation cycle.
+
+### Updates Logged
+1. **Qwen version normalization (repo-wide):**
+- Removed/updated all `Qwen2.5` references in active code/docs to keep the project strictly on `Qwen3.5` scope.
+- Runtime defaults remain aligned to `qwen3.5:4b` in execution entrypoints.
+
+2. **HF comparison pipeline stabilization (`src/run_hf_comparison.py`):**
+- Refactored execution to support **single-model-per-process** benchmarking to avoid CUDA OOM from sequential dual-load.
+- Added CLI options for explicit model run + post-hoc merge flow:
+  - `--model-label`
+  - `--model-name`
+  - `--compare-only`
+- Added explicit cleanup flow (object release + GC + CUDA cache clear) between phases.
+
+3. **Benchmark execution completion (base vs fine-tuned):**
+- Executed base model matrix run and persisted summary.
+- Executed fine-tuned LoRA matrix run in separate process and persisted summary.
+- Executed comparison merge step and generated delta report JSON.
+
+### New/Updated Artifacts Confirmed
+- `results/hf_base_qwen35_4b_summary.json`
+- `results/hf_finetuned_qwen355_4b_summary.json`
+- `results/hf_base_vs_finetuned_comparison.json`
+
+### Recorded Outcome Snapshot
+- Level 1 (constrained REPL) shows strongest post-finetune gains (tool selection + execution reliability).
+- Level 0 remains mostly flat/slightly lower on parameter correctness.
+- Level 2 remains mixed, indicating further trajectory diversity and repeated-trial evaluation are needed.
+
+### Next Logged Priority
+- Add repeated-trial pass-style reliability (`pass^k`-like) aggregation on top of current single-run metrics.
+
+---
+
+## 2026-03-16 — Phase A Implementation Start (Leakage Control + Reliability Metrics)
+
+**Session goal:** Begin execution of the RP improvement roadmap with concrete code changes focused on evaluation validity and reproducibility.
+
+### Implemented Changes
+1. **Deterministic split manifests added (`train/dev/test`)**
+- Updated `src/generate_test_data.py` to create:
+  - `test_data/queries/train_queries.json`
+  - `test_data/queries/dev_queries.json`
+  - `test_data/queries/test_queries.json`
+  - `test_data/ground_truth/train_expected_selections.json`
+  - `test_data/ground_truth/dev_expected_selections.json`
+  - `test_data/ground_truth/test_expected_selections.json`
+- Split generation is deterministic (`seed=42`) and keeps discovery/simple mix explicit.
+
+2. **Training leakage path reduced in trajectory generation**
+- Updated `src/generate_trajectories.py` to support `--seed-query-split` with options:
+  - `none` (default, leakage-safe)
+  - `train`, `dev`, `test`, `all`
+- Default behavior now avoids auto-injecting benchmark queries.
+- Added warnings for risky settings (`test` / `all`).
+
+3. **Split-aware evaluation runners**
+- Updated `src/run_baseline.py`:
+  - Added `--query-split {all,train,dev,test}`
+  - Added `resolve_eval_paths(...)` for split-specific files.
+- Updated `src/run_hf_comparison.py`:
+  - Added split-aware case loading via `--query-split`.
+  - Added configurable matrix registries via `--registries`.
+
+4. **Repeated-trial reliability metrics + confidence intervals**
+- Updated `src/evaluator.py` with `evaluate_repeated(...)`:
+  - pass-style metrics: `pass_at_1`, `pass_at_k`, `pass_power_k_proxy`
+  - mean-over-trials reliability for TSA/PC/failure
+  - bootstrap confidence intervals (95% default)
+- Updated `src/run_baseline.py` to expose `--trials` and execute repeated-trial mode.
+- Updated `src/run_hf_comparison.py` to expose `--trials` and include reliability deltas in comparison output when available.
+
+### Validation Completed (astro environment)
+- Regenerated test data successfully with new split files.
+- CLI sanity checks passed for:
+  - `python -m src.run_baseline --help` (shows `--query-split`, `--trials`)
+  - `python -m src.run_hf_comparison --help` (shows `--query-split`, `--trials`, `--registries`)
+
+### Next Step
+- Implement scaffold policy upgrades (`DISCOVER → VERIFY → DECIDE`) and failure-aware recovery logic to address Level-2 instability.
+
+---
+
+## 2026-03-16 — Phase B Implementation Progress (Supervision + Semantic Verification)
+
+**Session goal:** Continue roadmap execution by improving training supervision quality and semantic verification strictness.
+
+### Implemented Changes
+1. **Assistant-only loss masking in fine-tuning** (`src/finetune.py`)
+- Added explicit response-only masking hook via Unsloth chat-template utility.
+- Added CLI controls:
+  - `--no-assistant-only-loss`
+  - `--assistant-marker`
+  - `--user-marker`
+  - `--allow-unmasked-fallback`
+- Added runtime label-mask diagnostics to report active label ratio in train batches.
+
+2. **Parameter-grounded semantic checks** (`src/verify_trajectories.py`)
+- Added expected-parameter lookup loading from known GT manifests (`all/train/dev/test`).
+- Stage 3 now validates:
+  - required schema params exist and are non-empty
+  - expected param values match when query is known in manifests
+- Added more specific semantic reject reasons (missing required param, mismatch keys/values).
+
+### Validation Completed (astro environment)
+- `python -m src.verify_trajectories --help` executes cleanly.
+- `python -m src.finetune --help` executes cleanly and shows new masking controls.
+- Static error checks report no errors in modified files.
+
+### Next Step
+- Implement task-mode separation for evaluation/prompting (tool-selection vs discovery) and finalize Level-2 prompt simplification for cleaner E2E accounting.
+
+---
+
+## 2026-03-16 — Phase B Implementation Progress (Task Modes + Prompt Simplification + Significance)
+
+**Session goal:** Implement the remaining roadmap items for cleaner task accounting and stronger statistical reporting.
+
+### Implemented Changes
+1. **Discovery vs selection task-mode separation**
+- Updated `src/evaluator.py` to support discovery query scoring:
+  - Added `parse_discovery_answer(...)`.
+  - In discovery mode (`expected_tool == DISCOVERY` or `category == discovery`), success is evaluated as successful non-empty `FINAL(...)` answer.
+- Updated `src/run_baseline.py`:
+  - Added `--task-mode {selection,discovery,mixed}`.
+  - Filtering now supports explicit task subsets.
+- Updated `src/run_hf_comparison.py`:
+  - Added `--task-mode {selection,discovery,mixed}`.
+  - Registry filtering now respects selected task mode.
+
+2. **Level-2 prompt simplification**
+- Rewrote `prompts/level2.txt` with a more compact contract:
+  - Explicit `DISCOVER → VERIFY → DECIDE` workflow.
+  - One-code-block-per-turn rule.
+  - Separate output contracts for selection vs discovery tasks.
+  - Reduced examples to one clear selection and one discovery pattern.
+
+3. **Significance-style statistics in comparison outputs**
+- Extended repeated-trial evaluator outputs in `src/evaluator.py`:
+  - Added `mean_e2e_over_trials` + bootstrap CI.
+- Extended `src/run_hf_comparison.py` comparison writer:
+  - Adds approximate delta CI for key deltas when CIs are available.
+  - Adds `excludes_zero` significance flag for each supported delta.
+
+### Validation Completed (astro environment)
+- `python -m src.run_baseline --help` shows `--task-mode` and runs clean.
+- `python -m src.run_hf_comparison --help` shows `--task-mode` and runs clean.
+- Static error checks: no errors in updated Python files.
+
+### Next Step
+- Implement query-level paired significance testing (beyond CI overlap approximation) and add explicit markdown stats report generation for RP appendices.
+
+---
+
+## 2026-03-16 — First Repeated-Trial Significance Run (Dev Split, Selection Mode)
+
+**Session goal:** Execute the first end-to-end repeated-trial benchmark comparison with significance-bearing outputs.
+
+### Execution (astro environment)
+- Base model run:
+  - `python -m src.run_hf_comparison --model-label base_qwen35_4b --model-name Qwen/Qwen3.5-4B --query-split dev --task-mode selection --trials 5 --registries small_10 medium_25`
+- Fine-tuned model run:
+  - `python -m src.run_hf_comparison --model-label finetuned_qwen355_4b --model-name finetuned/qwen3.55-4b-rlm-lora --query-split dev --task-mode selection --trials 5 --registries small_10 medium_25`
+- Merge comparison:
+  - `python -m src.run_hf_comparison --compare-only --base-summary results/hf_base_qwen35_4b_summary_dev.json --finetuned-summary results/hf_finetuned_qwen355_4b_summary_dev.json`
+
+### Artifacts Produced
+- `results/hf_base_qwen35_4b_summary_dev.json`
+- `results/hf_finetuned_qwen355_4b_summary_dev.json`
+- `results/hf_base_vs_finetuned_comparison.json`
+- `results/hf_dev_selection_trials5_summary.json`
+
+### Observed Pattern
+- On this small dev split (1 query in small_10, 3 queries in medium_25), fine-tuned model underperformed base in several Level 0 and Level 2 cells.
+- Several delta CIs marked `excludes_zero` for negative deltas where outcomes were deterministic across repeated trials.
+- This run is useful as a reliability sanity check but not sufficient alone for broad claims due to very small dev sample size.
+
+### Next Step
+- Run repeated-trial comparison on larger coverage (`query_split=all`, `registries=small_10 medium_25 large_50 xlarge_100`) and then add query-level paired significance tests.
+
+---
+
+## 2026-03-16 — Systematic Execution Ledger Consolidation
+
+**Session goal:** Consolidate all implementation work completed so far into the main project documentation and explicitly separate completed work, in-progress work, and remaining work.
+
+### Documentation updates completed
+1. `research/plan.md`
+- Expanded from a roadmap into a status-bearing execution ledger.
+- Added per-step implementation status:
+  - completed
+  - partially completed
+  - in progress
+  - not started
+- Added a detailed remaining-work summary.
+
+2. `research/rp_strong_results_improvement_plan.md`
+- Added an implementation-status section summarizing roadmap execution state.
+
+3. `research/rp_analysis_summary_2026_03_16.md`
+- Updated from diagnosis-only summary to diagnosis + current execution state.
+
+4. `research/base_vs_finetuned_comparative_analysis.md`
+- Added a post-analysis update section documenting what changed after the original write-up.
+
+### Current implementation state at consolidation time
+
+**Completed core infrastructure:**
+- Split-safe query manifests
+- Leakage-safe trajectory seeding
+- Split-aware runners
+- Repeated-trial evaluator
+- Bootstrap confidence intervals
+- Discovery-vs-selection task modes
+- Simplified Level-2 prompt
+- Stateful scaffold recovery logic
+- Assistant-only loss masking
+- Parameter-grounded Stage-3 verification
+- HF comparison markdown report generation
+- HF comparison reproducibility manifest generation
+- Query-level paired significance outputs
+
+**In progress:**
+- Broad repeated-trial HF comparison across all registries in selection mode
+
+**Still pending:**
+- Trajectory provenance metadata enrichment
+- Split-manifest-aware fine-tuning train/eval partitioning
+- Hard-negative / correction-turn data generation
+- Preference-tuning stage
+- Ablation harness and appendix-grade automated reporting across all pipelines
+
+### Why this consolidation matters
+- The project is now beyond research design and partial prototyping.
+- A substantial portion of the measurement and control-stack implementation is complete.
+- The main unresolved risk is no longer missing infrastructure; it is whether broader empirical evidence will support the intended RP narrative after stricter evaluation.
+
+### Next Step
+- Wait for the active all-registry repeated-trial run to finish, then convert its outputs into a consolidated RP-facing result report and use that report to prioritize the next training/data interventions.
+
 
