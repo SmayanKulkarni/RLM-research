@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-03-18T07:41:52.826955Z",
+  "mode": "compare_only",
+  "inputs": {
+    "base_summary": "results/hf_base_qwen35_4b_all_complex_dev_selection_summary_dev.json",
+    "finetuned_summary": "results/hf_finetuned_qwen35_4b_all_complex_dev_selection_summary_dev.json"
+  },
+  "outputs": {
+    "comparison_json": "results/hf_base_vs_finetuned_comparison.json",
+    "report_markdown": "results/hf_base_vs_finetuned_all_complex_report_dev_selection.md"
+  },
+  "settings": {
+    "query_split": "dev",
+    "task_mode": "selection",
+    "trials": 5,
+    "registries": [
+      "small_10",
+      "medium_25",
+      "large_50",
+      "xlarge_100"
+    ]
+  }
+}

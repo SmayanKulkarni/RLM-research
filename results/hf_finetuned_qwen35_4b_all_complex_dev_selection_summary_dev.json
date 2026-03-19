@@ -1,0 +1,1070 @@
+{
+  "level0_small_10": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.0,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.0,
+    "avg_turns": 1.0,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 1,
+    "pass_at_1": 0.0,
+    "pass_at_k": 0.0,
+    "pass_power_k_proxy": 0.0,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 1.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 27.3,
+    "trials": 5
+  },
+  "level0_medium_25": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.3333,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.3333,
+    "avg_turns": 1.0,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 3,
+    "pass_at_1": 0.3333,
+    "pass_at_k": 0.3333,
+    "pass_power_k_proxy": 0.3333,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 1.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 1.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 1.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 106.0,
+    "trials": 5
+  },
+  "level0_large_50": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.25,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.25,
+    "avg_turns": 1.0,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 4,
+    "pass_at_1": 0.25,
+    "pass_at_k": 0.25,
+    "pass_power_k_proxy": 0.25,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_tsa_over_trials": {
+        "low": 1.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 1.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 137.1,
+    "trials": 5
+  },
+  "level0_xlarge_100": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.25,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.25,
+    "avg_turns": 1.0,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 4,
+    "pass_at_1": 0.25,
+    "pass_at_k": 0.25,
+    "pass_power_k_proxy": 0.25,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_tsa_over_trials": {
+        "low": 1.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 1.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 137.1,
+    "trials": 5
+  },
+  "level1_small_10": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.0,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.0,
+    "avg_turns": 4.0,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 1,
+    "pass_at_1": 0.0,
+    "pass_at_k": 0.0,
+    "pass_power_k_proxy": 0.0,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 1.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 59.0,
+    "trials": 5
+  },
+  "level1_medium_25": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.3333,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.3333,
+    "avg_turns": 4.67,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 3,
+    "pass_at_1": 0.3333,
+    "pass_at_k": 0.3333,
+    "pass_power_k_proxy": 0.3333,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 1.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 1.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 1.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ]
+    },
+    "elapsed_seconds": 225.3,
+    "trials": 5
+  },
+  "level1_large_50": {
+    "tool_selection_accuracy": 0.5,
+    "parameter_correctness": 0.25,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.25,
+    "avg_turns": 3.75,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 4,
+    "pass_at_1": 0.25,
+    "pass_at_k": 0.25,
+    "pass_power_k_proxy": 0.25,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_tsa_over_trials": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 255.7,
+    "trials": 5
+  },
+  "level1_xlarge_100": {
+    "tool_selection_accuracy": 0.5,
+    "parameter_correctness": 0.25,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.25,
+    "avg_turns": 3.75,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 4,
+    "pass_at_1": 0.25,
+    "pass_at_k": 0.25,
+    "pass_power_k_proxy": 0.25,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_tsa_over_trials": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.75
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 254.8,
+    "trials": 5
+  },
+  "level2_small_10": {
+    "tool_selection_accuracy": 1.0,
+    "parameter_correctness": 0.0,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.0,
+    "avg_turns": 3.0,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 1,
+    "pass_at_1": 0.0,
+    "pass_at_k": 0.0,
+    "pass_power_k_proxy": 0.0,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 1.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 32.3,
+    "trials": 5
+  },
+  "level2_medium_25": {
+    "tool_selection_accuracy": 0.6667,
+    "parameter_correctness": 0.0,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.0,
+    "avg_turns": 3.33,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 3,
+    "pass_at_1": 0.0,
+    "pass_at_k": 0.0,
+    "pass_power_k_proxy": 0.0,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 0.0,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 1.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 122.6,
+    "trials": 5
+  },
+  "level2_large_50": {
+    "tool_selection_accuracy": 0.75,
+    "parameter_correctness": 0.0,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.0,
+    "avg_turns": 3.5,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 4,
+    "pass_at_1": 0.0,
+    "pass_at_k": 0.0,
+    "pass_power_k_proxy": 0.0,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 0.25,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 1.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 170.7,
+    "trials": 5
+  },
+  "level2_xlarge_100": {
+    "tool_selection_accuracy": 0.75,
+    "parameter_correctness": 0.0,
+    "repl_code_validity": 1.0,
+    "end_to_end_accuracy": 0.0,
+    "avg_turns": 3.5,
+    "failure_rate": 0.0,
+    "context_savings_pct": 1.0,
+    "total_queries": 4,
+    "pass_at_1": 0.0,
+    "pass_at_k": 0.0,
+    "pass_power_k_proxy": 0.0,
+    "confidence_intervals": {
+      "pass_at_1": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_at_k": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "pass_power_k_proxy": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_tsa_over_trials": {
+        "low": 0.25,
+        "high": 1.0
+      },
+      "mean_pc_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_failure_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "mean_e2e_over_trials": {
+        "low": 0.0,
+        "high": 0.0
+      }
+    },
+    "per_query_rates": {
+      "tsa": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 1.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 1.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 1.0
+        }
+      ],
+      "pc": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ],
+      "e2e": [
+        {
+          "query": "Translate 'Hello world' to French",
+          "rate": 0.0
+        },
+        {
+          "query": "Search the web for 'best python frameworks 2025'",
+          "rate": 0.0
+        },
+        {
+          "query": "List all files in the /var/log directory",
+          "rate": 0.0
+        },
+        {
+          "query": "Find all Python files in /src that contain the word 'TODO'",
+          "rate": 0.0
+        }
+      ]
+    },
+    "elapsed_seconds": 166.9,
+    "trials": 5
+  }
+}

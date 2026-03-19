@@ -478,6 +478,9 @@ def build_dataset(args: argparse.Namespace) -> tuple[list[dict[str, Any]], list[
     source_stats: dict[str, int] = {}
     for raw_path in args.inputs:
         path = PROJECT_ROOT / raw_path
+        if not path.exists():
+            print(f"[WARN] Skipping missing input: {path}")
+            continue
         rows = load_jsonl(path)
         source_stats[raw_path] = len(rows)
         for row in rows:
