@@ -79,7 +79,7 @@ flowchart LR
     F --> A
 ```
 
-The [custom GRPO loop](src/grpo_multiturn_train.py) grades complete episodes, from first search to `FINAL()` or timeout. It combines final-answer reward with a smaller intermediate signal: $r=r_{\mathrm{final}}+0.15r_{\mathrm{intermediate}}$. For each sampled group, it computes $A_i=(r_i-\bar r)/(\operatorname{std}(r)+\epsilon)$, drops groups without reward variation, and clips the policy-ratio objective. The [reward implementation](src/grpo_environment.py) scores answer format, tool identity, parameter keys, and parameter values. We also ran REINFORCE and PPO experiments; [the evaluation matrix](wiki/results/FINAL_EVAL_MATRIX.md) records their outcomes.
+The [custom GRPO loop](src/grpo_multiturn_train.py) grades complete episodes, from first search to `FINAL()` or timeout. It combines final-answer reward with a smaller intermediate signal: $r=r_{\mathrm{final}}+0.15r_{\mathrm{intermediate}}$. For each sampled group, it computes $A_i=(r_i-\bar r)/(\mathrm{std}(r)+\epsilon)$, drops groups without reward variation, and clips the policy-ratio objective. The [reward implementation](src/grpo_environment.py) scores answer format, tool identity, parameter keys, and parameter values. We also ran REINFORCE and PPO experiments; [the evaluation matrix](wiki/results/FINAL_EVAL_MATRIX.md) records their outcomes.
 
 ## Results
 
